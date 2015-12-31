@@ -1,3 +1,14 @@
 <Template name="status">
-
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h2>Greenhouse</h2>
+            </div>
+        </div>
+        <div class="row">
+            {{#each allMonitors}}
+            {{>statusMonitorTemp}}
+            {{/each}}
+        </div>
+    </div>
 </Template>

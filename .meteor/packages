@@ -28,3 +28,5 @@ email
 nemo64:bootstrap
 react
 kadira:blaze-layout
+abhiaiyer:meteor-twilio
+aldeed:simple-schema
