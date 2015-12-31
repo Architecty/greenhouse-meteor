@@ -1,0 +1,34 @@
+<Template name="login">
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-4 col-md-offset-4">
+
+                <div class="panel panel-default loginPanel">
+                    <div class="panel-heading">
+                        <h1 class="panel-title text-center">Log In</h1>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email address</label>
+                                <input type="email" class="form-control" id="email" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Password">
+                            </div>
+                            <div class="col-md-6 col-md-offset-3">
+                                <button type="submit" class="btn btn-primary btn-block">Log In</button>
+
+                                <a href="{{pathFor 'forgotPassword'}}" class='text-center'><h6>Forgot Password?</h6></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</Template>
