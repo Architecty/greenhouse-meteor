@@ -7,6 +7,6 @@ Template.status.onCreated(function(){
 
 Template.status.helpers({
   allSensors: function(){
-    Sensors.find();
+    return Sensors.find();
   }
 })

@@ -8,6 +8,10 @@ SensorSchema = new SimpleSchema({
     type: String,
     label: "The name of the sensor"
   },
+  sensorID: {
+    type: String,
+    label: "The ID registered by the Raspberry Pi"
+  },
   type: {
     type: String,
     label: "The type of sensor, such as temp, moisture, etc"

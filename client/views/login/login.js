@@ -13,22 +13,22 @@ Template.login.events({
             default: bootbox.alert(error.message);
           }
         } else {
-          if(Meteor.user()){
-            if(_.has(Meteor.user(), 'profile')){
-              var user = Meteor.user();
-              heap.identify({
-                name: user.profile.firstName || "" + " " + user.profile.lastName || "",
-                email: user.emails[0].address
-              });
-            } else {
-              heap.identify({
-                email: user.emails[0].address
-              });
-            }
-          }
-          if(Router.current().route.getName() == "login"){
-            Router.go('generalDashboard');
-          }
+//           if(Meteor.user()){
+//             if(_.has(Meteor.user(), 'profile')){
+//               var user = Meteor.user();
+//               heap.identify({
+//                 name: user.profile.firstName || "" + " " + user.profile.lastName || "",
+//                 email: user.emails[0].address
+//               });
+//             } else {
+//               heap.identify({
+//                 email: user.emails[0].address
+//               });
+//             }
+//           }
+//           if(Router.current().route.getName() == "login"){
+//             Router.go('generalDashboard');
+//           }
         }
       })
     } else {
