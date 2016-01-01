@@ -6,7 +6,7 @@ Meteor.startup(function(){
       var currentDate = new Date();
       for(var i = 0; i < valuesArray.length; i++){
         var thisSensor_id = findSensor(valuesArray[i].sensorID, valuesArray[i].currentIP);
-        var value = +valuesArray[i].value.match(/\d*/)[0];
+        var value = +valuesArray[i].value.match(/-??\d+/)[0];
         Readings.insert({
           sensor_id: thisSensor_id,
           value: value,
