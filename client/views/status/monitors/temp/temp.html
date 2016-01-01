@@ -1,7 +1,13 @@
 <Template name="statusMonitorTemp">
 
-    <div class="text-center">
-        <h3>{{name}} {{sensorID}}</h3>
+    <div class="col-md-4 col-md-offset-4 text-center">
+        <h3>{{#if name}}{{name}}{{else}}{{sensorID}}{{/if}}
+            <span class="pull-right">
+                <a href="{{pathFor 'editSensor' sensor_id=_id}}">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+            </span>
+        </h3>
         <h2>{{{valueToTemp latestReading.value}}}</h2>
         <h6>{{timeToString latestReading.time}}</h6>
         <h5>{{currentIP}}</h5>

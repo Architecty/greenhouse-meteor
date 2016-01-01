@@ -14,6 +14,11 @@ Meteor.startup(function(){
         });
         console.log("Added Reading", value, "from sensor", valuesArray[i].sensorID);
       }
+    },
+    updateSensor: function(sensor_id, name, desc, type){
+      if(!Meteor.user()) return;
+      Sensors.update({_id: sensor_id}, {$set: {name: name, type: type, desc: desc}});
+      return;
     }
   })
 })

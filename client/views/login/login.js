@@ -26,9 +26,9 @@ Template.login.events({
 //               });
 //             }
 //           }
-//           if(Router.current().route.getName() == "login"){
-//             Router.go('generalDashboard');
-//           }
+          if(Router.current().route.getName() == "login"){
+            FlowRouter.go('status');
+          }
         }
       })
     } else {
