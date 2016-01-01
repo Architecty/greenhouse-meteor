@@ -11,6 +11,7 @@
         <h2>{{{valueToTemp latestReading.value}}}</h2>
         <h6>{{timeToString latestReading.time}}</h6>
         <h5>{{currentIP}}</h5>
+        <a href="{{pathFor 'alarmList' sensor_id=_id}}">Alarm List</a>
     </div>
 
 </Template>

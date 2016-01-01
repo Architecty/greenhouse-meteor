@@ -18,3 +18,13 @@ Meteor.publish('singleSensor', function(sensor_id){
     return Sensors.find({_id: sensor_id});
   }
 })
+
+Meteor.publish('alarmList', function(sensor_id){
+  var thisUser = Meteor.users.findOne({_id: this.userId});
+  if(thisUser){
+    return [
+      Sensors.find({_id: sensor_id}),
+      Alarms.find({sensor_id: sensor_id})
+    ];
+  }
+})

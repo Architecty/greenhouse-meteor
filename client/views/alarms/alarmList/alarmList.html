@@ -1,0 +1,8 @@
+<Template name="alarmList">
+    <a href="{{pathFor 'addAlarm' sensor_id=thisSensor._id}}">Add Alarm</a>
+
+    <h3>Alarm List</h3>
+    {{#each allAlarms}}
+    <a href="{{pathFor 'editAlarm' alarm_id=_id}}">{{name}}</a>
+    {{/each}}
+</Template>

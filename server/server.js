@@ -19,6 +19,17 @@ Meteor.startup(function(){
       if(!Meteor.user()) return;
       Sensors.update({_id: sensor_id}, {$set: {name: name, type: type, desc: desc}});
       return;
+    },
+    addAlarm: function(sensor_id, name, max, min){
+      if(!Meteor.user()) return;
+      console.log("Add Alarm");
+      Alarms.insert({sensor_id: sensor_id, name: name, maxValue: max, minValue: min, enabled:true, active:false, actions:{sendSMS: false, sendEmail:true}});
+      return;
+    },
+    editAlarm: function(alarm_id, name, max, min){
+      if(!Meteor.user()) return;
+      Alarms.update({_id: alarm_id}, {$set: {name: name, maxValue: max, minValue: min}});
+      return;
     }
   })
 })

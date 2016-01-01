@@ -41,7 +41,7 @@ ReadingSchema = new SimpleSchema({
   }
 })
 
-Alarms = new SimpleSchema({
+AlarmSchema = new SimpleSchema({
   sensor_id: {
     type: String,
     label: "The _id of the sensor this reading comes from."
@@ -73,7 +73,7 @@ Alarms = new SimpleSchema({
 });
 
 
-Alerts = new SimpleSchema({
+AlertSchema = new SimpleSchema({
   alarm_id: {
     type: String,
     label: "The _id of the alarm that sent this alert"
