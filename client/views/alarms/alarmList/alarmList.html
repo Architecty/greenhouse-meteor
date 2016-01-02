@@ -1,8 +1,34 @@
 <Template name="alarmList">
-    <a href="{{pathFor 'addAlarm' sensor_id=thisSensor._id}}">Add Alarm</a>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel panel-success loginPanel">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">
+                            Alarms for {{#if thisSensor.name}}{{thisSensor.name}}{{else}}{{thisSensor.sensorID}}{{/if}}
+                        </h1>
+                    </div>
+                    <div class="panel-body">
 
-    <h3>Alarm List</h3>
-    {{#each allAlarms}}
-    <a href="{{pathFor 'editAlarm' alarm_id=_id}}">{{name}}</a>
-    {{/each}}
+                        <a class="btn btn-sm btn-block btn-default" href="{{pathFor 'addAlarm' sensor_id=thisSensor._id}}">Add Alarm</a>
+<br>
+                        <table class="table" table-condensed>
+                            <tbody>
+                                {{#each allAlarms}}
+                                <tr>
+                                    <td>
+                                        <a href="{{pathFor 'editAlarm' alarm_id=_id}}">{{name}}</a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+
+                        <a class="btn btn-sm btn-default" href="{{pathFor 'status'}}"> Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </Template>

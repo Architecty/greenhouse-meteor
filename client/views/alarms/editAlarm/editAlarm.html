@@ -1,0 +1,36 @@
+<Template name="editAlarm">
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel panel-success loginPanel">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">
+                            Add Alarm
+                        </h1>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="sensorName">Alarm Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name" value="{{thisAlarm.name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorName">Maximum Value</label>
+                                <input type="number" class="form-control" id="maxValue" placeholder="Max" value="{{thisAlarm.maxValue}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorDescription">Minimum Value</label>
+                                <input type="number" class="form-control" id="minValue" placeholder="Min" value="{{thisAlarm.minValue}}">
+                            </div>
+
+                            <a href="{{pathFor 'alarmList' sensor_id=thisAlarm.sensor_id}}" id="cancel" class="btn btn-default">Cancel</a>
+                            <button type="submit" id="addAlarm" class="btn btn-success">Update Alarm</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Template>

@@ -1,31 +1,35 @@
 <Template name="addAlarm">
+    <br>
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
-                <h2>Add Alarm</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4">
-
-                <form>
-                    <div class="form-group">
-                        <label for="sensorName">Alarm Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Name">
+                <div class="panel panel-success loginPanel">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">
+                            Add Alarm
+                        </h1>
                     </div>
-                    <div class="form-group">
-                        <label for="sensorName">Maximum Value</label>
-                        <input type="number" class="form-control" id="maxValue" placeholder="Max">
-                    </div>
-                    <div class="form-group">
-                        <label for="sensorDescription">Minimum Value</label>
-                        <input type="number" class="form-control" id="minValue" placeholder="Min">
-                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="sensorName">Alarm Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorName">Maximum Value</label>
+                                <input type="number" class="form-control" id="maxValue" placeholder="Max">
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorDescription">Minimum Value</label>
+                                <input type="number" class="form-control" id="minValue" placeholder="Min">
+                            </div>
 
-                    <a href="{{pathFor 'alarmList' sensor_id=thisSensor._id}}" type="submit" id="cancel" class="btn btn-default">Cancel</a>
-                    <button type="submit" id="addAlarm" class="btn btn-success">Add Alarm</button>
+                            <a href="{{pathFor 'alarmList' sensor_id=thisSensor._id}}" type="submit" id="cancel" class="btn btn-default">Cancel</a>
+                            <button type="submit" id="addAlarm" class="btn btn-success">Add Alarm</button>
 
-                </form>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

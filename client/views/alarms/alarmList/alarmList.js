@@ -8,5 +8,8 @@ Template.alarmList.onCreated(function(){
 Template.alarmList.helpers({
   thisSensor: function(){
     return Sensors.findOne({_id: FlowRouter.getParam('sensor_id')});
+  },
+  allAlarms: function(){
+    return Alarms.find({sensor_id: FlowRouter.getParam('sensor_id')});
   }
 })

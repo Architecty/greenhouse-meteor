@@ -1,32 +1,42 @@
 <Template name="editSensor">
+    <br>
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
-                <form>
-                    <div class="form-group">
-                        <label>ID: {{thisSensor.sensorID}}</label>
+                <div class="panel panel-success loginPanel">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">
+                            Edit Sensor
+                        </h1>
                     </div>
-                    <div class="form-group">
-                        <label for="sensorName">Name</label>
-                        <input type="text" class="form-control" id="sensorName" placeholder="Name" value="{{thisSensor.name}}">
-                    </div>
-                    <div class="form-group">
-                        <label for="sensorDescription">Description</label>
-                        <textarea id="sensorDescription" class="form-control" rows="3">{{thisSensor.desc}}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="sensorDescription">Type</label>
-                        <select id="sensorType" class="form-control">
-                            <option>Temperature (DS18B20)</option>
-                        </select>
-                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label>ID: {{thisSensor.sensorID}}</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorName">Name</label>
+                                <input type="text" class="form-control" id="sensorName" placeholder="Name" value="{{thisSensor.name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorDescription">Description</label>
+                                <textarea id="sensorDescription" class="form-control" rows="3">{{thisSensor.desc}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorDescription">Type</label>
+                                <select id="sensorType" class="form-control">
+                                    <option>Temperature (DS18B20)</option>
+                                </select>
+                            </div>
 
 
-                    <a href="{{pathFor 'status'}}" type="submit" id="cancel" class="btn btn-default">Cancel</a>
-                    <button type="submit" id="updateSensor" class="btn btn-success">Update</button>
+                            <a href="{{pathFor 'status'}}" type="submit" id="cancel" class="btn btn-default">Cancel</a>
+                            <button type="submit" id="updateSensor" class="btn btn-success">Update</button>
 
 
-                </form>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

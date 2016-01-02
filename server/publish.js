@@ -28,3 +28,12 @@ Meteor.publish('alarmList', function(sensor_id){
     ];
   }
 })
+
+Meteor.publish('editAlarm', function(alarm_id){
+  var thisUser = Meteor.users.findOne({_id: this.userId});
+  if(thisUser){
+    return [
+      Alarms.find({_id: alarm_id})
+    ];
+  }
+})

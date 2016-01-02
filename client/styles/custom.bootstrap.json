@@ -5,10 +5,10 @@
     "glyphicons"           : true,
 
     "scaffolding"          : true,
-    "type"                 : false,
+    "type"                 : true,
     "code"                 : false,
     "grid"                 : true,
-    "tables"               : false,
+    "tables"               : true,
     "forms"                : true,
     "buttons"              : true,
 
@@ -32,7 +32,7 @@
     "list-group"           : false,
     "panels"               : true,
     "responsive-embed"     : false,
-    "wells"                : false,
+    "wells"                : true,
     "close"                : false,
 
     "modals"               : true,

@@ -1,17 +1,33 @@
 <Template name="statusMonitorTemp">
 
-    <div class="col-md-4 col-md-offset-4 text-center">
-        <h3>{{#if name}}{{name}}{{else}}{{sensorID}}{{/if}}
-            <span class="pull-right">
-                <a href="{{pathFor 'editSensor' sensor_id=_id}}">
-                    <span class="glyphicon glyphicon-pencil"></span>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-success loginPanel">
+            <div class="panel-heading">
+                <h1 class="panel-title">{{#if name}}{{name}}{{else}}{{sensorID}}{{/if}}
+<!--                     <span class="pull-right">
+                        <a href="{{pathFor 'alarmList' sensor_id=_id}}">
+                            <span class="glyphicon glyphicon-bell"></span>
+                        </a>
+                        <a href="{{pathFor 'editSensor' sensor_id=_id}}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </span> -->
+                </h1>
+            </div>
+            <div class="panel-body">
+                <div class="well well-sm text-center">
+                    <h1>{{{valueToTemp latestReading.value}}}</h1>
+                    <h6>{{timeToString latestReading.time}}</h6>
+                </div>
+                <a class="btn btn-xs btn-default" href="{{pathFor 'alarmList' sensor_id=_id}}">
+                    <span class="glyphicon glyphicon-bell"></span> Alarms
                 </a>
-            </span>
-        </h3>
-        <h2>{{{valueToTemp latestReading.value}}}</h2>
-        <h6>{{timeToString latestReading.time}}</h6>
-        <h5>{{currentIP}}</h5>
-        <a href="{{pathFor 'alarmList' sensor_id=_id}}">Alarm List</a>
+                <span class="pull-right">
+                    <a class="btn btn-xs btn-default" href="{{pathFor 'editSensor' sensor_id=_id}}">
+                        <span class="glyphicon glyphicon-pencil"></span> Edit Sensor
+                    </a>
+                </span>
+            </div>
+        </div>
     </div>
-
 </Template>
