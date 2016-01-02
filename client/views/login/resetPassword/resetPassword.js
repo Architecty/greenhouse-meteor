@@ -3,11 +3,11 @@ Template.resetPassword.events({
         e.preventDefault();
         var password = $("#password").val();
 
-        Accounts.resetPassword(Router.current().params.token, password, function(err){
+        Accounts.resetPassword(FlowRouter.getParam('token'), password, function(err){
             if(err){
                 bootbox.alert(err);
             } else {
-                Router.go('/');
+                FlowRouter.go('status');
             }
         })
 
