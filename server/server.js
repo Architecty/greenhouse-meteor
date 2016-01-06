@@ -12,6 +12,7 @@ Meteor.startup(function(){
           value: value,
           time: currentDate.getTime()
         });
+        testAlarms(thisSensor_id);
         console.log("Added Reading", value, "from sensor", valuesArray[i].sensorID);
       }
     },
@@ -56,8 +57,8 @@ var findSensor = function(sensorID, currentIP){
   }
 }
 
-var testAlarms = function(){
-  var allAlarms = Alarms.find({enabled:true, active: false});
+var testAlarms = function(sensor_id){
+  var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: false});
   allAlarms.forEach(function(doc){
     switch(doc.type){
       case "above":
