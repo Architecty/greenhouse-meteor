@@ -1,5 +1,5 @@
 <Template name="alarmList">
-    <br>
+    {{>navBar}}
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
@@ -12,19 +12,12 @@
                     <div class="panel-body">
 
                         <a class="btn btn-sm btn-block btn-default" href="{{pathFor 'addAlarm' sensor_id=thisSensor._id}}">Add Alarm</a>
-<br>
-                        <table class="table" table-condensed>
-                            <tbody>
-                                {{#each allAlarms}}
-                                <tr>
-                                    <td>
-                                        <a href="{{pathFor 'editAlarm' alarm_id=_id}}">{{name}}</a>
-                                    </td>
-                                </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
+                        <hr>
+                        {{#each allAlarms}}
+                        <a href="{{pathFor 'editAlarm' alarm_id=_id}}" class="btn btn-block btn-info">{{name}}</a>
+                        {{/each}}
 
+                        <hr>
                         <a class="btn btn-sm btn-default" href="{{pathFor 'status'}}"> Back</a>
                     </div>
                 </div>

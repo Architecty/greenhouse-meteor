@@ -23,6 +23,10 @@ SensorSchema = new SimpleSchema({
   desc: {
     type: String,
     label: "A more detailed description of what this sensor is tracking, and where it's tracking."
+  },
+  currentIP: {
+    type: String,
+    label: "The last reported IP address of this particular sensor"
   }
 })
 
@@ -46,13 +50,13 @@ AlarmSchema = new SimpleSchema({
     type: String,
     label: "The _id of the sensor this reading comes from."
   },
-  maxValue: {
-    type: Number,
-    label: "The maximum value that this sensor can have, before it sends an alert"
+  alarmType: {
+    type: String,
+    label: "What type of alarm is this? Is it looking for something that's above, below, or hasn't happened for 'x' time?"
   },
-  minValue: {
+  value: {
     type: Number,
-    label: "The minimum value that this sensor can have, before it sends an alert."
+    label: "The value that this alarm is checking for."
   },
   active: {
     type: Boolean,

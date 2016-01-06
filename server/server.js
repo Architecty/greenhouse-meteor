@@ -20,15 +20,19 @@ Meteor.startup(function(){
       Sensors.update({_id: sensor_id}, {$set: {name: name, type: type, desc: desc}});
       return;
     },
-    addAlarm: function(sensor_id, name, max, min){
+    addAlarm: function(sensor_id, name, alarmType, value, msgTypes){
       if(!Meteor.user()) return;
       console.log("Add Alarm");
-      Alarms.insert({sensor_id: sensor_id, name: name, maxValue: max, minValue: min, enabled:true, active:false, actions:{sendSMS: false, sendEmail:true}});
+      var sendEmail = (msgTypes.indexOf("email") > -1),
+          sendSMS = (msgTypes.indexOf("sms") > -1);
+      Alarms.insert({sensor_id: sensor_id, owner_id: Meteor.userId(), name: name, alarmType: alarmType, value: +value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}});
       return;
     },
-    editAlarm: function(alarm_id, name, max, min){
+    editAlarm: function(alarm_id, name, alarmType, value, msgTypes){
       if(!Meteor.user()) return;
-      Alarms.update({_id: alarm_id}, {$set: {name: name, maxValue: max, minValue: min}});
+      var sendEmail = (msgTypes.indexOf("email") > -1),
+          sendSMS = (msgTypes.indexOf("sms") > -1);
+      Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: +value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}}});
       return;
     }
   })
@@ -50,4 +54,27 @@ var findSensor = function(sensorID, currentIP){
       desc: ""
     });
   }
+}
+
+var testAlarms = function(){
+
+}
+
+var activateAlarm = function(alarm_id){
+  Alarms.update({_id: alarm_id}, {$set: {active:true}});
+  var thisAlarm = Alarms.findOne({_id: alarm_id});
+  if(thisAlarm.actions.sendEmail){
+    sendEmailAlert(alarm_id);
+  }
+  if(thisAlarm.actions.sendSMS){
+    sendSMSAlert(alarm_id);
+  }
+}
+
+var sendSMSAlert = function(alarm_id){
+
+}
+
+var sendEmailAlert = function(alarm_id){
+
 }

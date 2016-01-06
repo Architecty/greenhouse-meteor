@@ -1,5 +1,5 @@
 <Template name="addAlarm">
-    <br>
+    {{>navBar}}
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
@@ -12,21 +12,35 @@
                     <div class="panel-body">
                         <form>
                             <div class="form-group">
-                                <label for="sensorName">Alarm Name</label>
+                                <label for="sensorName">Create an alarm called...</label>
                                 <input type="text" class="form-control" id="name" placeholder="Name">
                             </div>
+
                             <div class="form-group">
-                                <label for="sensorName">Maximum Value</label>
-                                <input type="number" class="form-control" id="maxValue" placeholder="Max">
+                                <label for="sensorDescription">When the reading...</label>
+                                <button class="btn btn-block btn-sm {{whichAlarm 'above'}} alarmType" id="above">is Above</button>
+                                <button class="btn btn-block btn-sm {{whichAlarm 'below'}} alarmType" id="below">is Below</button>
+                                <button class="btn btn-block btn-sm {{whichAlarm 'stop'}} alarmType" id="stop">Stops reporting for</button>
                             </div>
+
                             <div class="form-group">
-                                <label for="sensorDescription">Minimum Value</label>
-                                <input type="number" class="form-control" id="minValue" placeholder="Min">
+                                <label for="sensorDescription">This value...</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="Value" aria-describedby="basic-addon2" id="value">
+                                    <span class="input-group-addon" id="basic-addon2">{{{whichValueType}}}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sensorDescription">Then send me an alert by...</label>
+                                <button class="btn btn-block btn-sm {{whichMsgType 'email'}} msgType" id="email">Email</button>
+                                <button class="btn btn-block btn-sm {{whichMsgType 'sms'}} msgType" id="sms">SMS</button>
                             </div>
 
                             <a href="{{pathFor 'alarmList' sensor_id=thisSensor._id}}" type="submit" id="cancel" class="btn btn-default">Cancel</a>
-                            <button type="submit" id="addAlarm" class="btn btn-success">Add Alarm</button>
-
+                            <span class="pull-right">
+                                <button type="submit" id="addAlarm" class="btn btn-success">Add Alarm</button>
+                            </span>
                         </form>
                     </div>
                 </div>
