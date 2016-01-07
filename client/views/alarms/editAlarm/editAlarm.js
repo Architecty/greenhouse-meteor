@@ -14,6 +14,7 @@ Template.editAlarm.helpers({
       if(thisAlarm.actions.sendSMS) msgType.push('sms');
       Session.set('msgType', msgType);
       Session.set('alarmType', thisAlarm.alarmType);
+      thisAlarm.value = thisAlarm.value * (9/5) + 32;
     }
     return thisAlarm;
   },

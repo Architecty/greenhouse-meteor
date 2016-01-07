@@ -26,14 +26,17 @@ Meteor.startup(function(){
       console.log("Add Alarm");
       var sendEmail = (msgTypes.indexOf("email") > -1),
           sendSMS = (msgTypes.indexOf("sms") > -1);
-      Alarms.insert({sensor_id: sensor_id, owner_id: Meteor.userId(), name: name, alarmType: alarmType, value: +value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}});
+      var valueC = (+value * (5/9) -32);
+
+      Alarms.insert({sensor_id: sensor_id, owner_id: Meteor.userId(), name: name, alarmType: alarmType, value: valueC, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}});
       return;
     },
     editAlarm: function(alarm_id, name, alarmType, value, msgTypes){
       if(!Meteor.user()) return;
       var sendEmail = (msgTypes.indexOf("email") > -1),
           sendSMS = (msgTypes.indexOf("sms") > -1);
-      Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: +value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}}});
+      var valueC = (+value * (5/9) -32);
+      Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: valueC, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}}});
       return;
     }
   })
