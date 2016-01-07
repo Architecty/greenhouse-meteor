@@ -24,7 +24,7 @@ Meteor.publish('alarmList', function(sensor_id){
   if(thisUser){
     return [
       Sensors.find({_id: sensor_id}),
-      Alarms.find({sensor_id: sensor_id})
+      Alarms.find({sensor_id: sensor_id, owner_id: this.userId})
     ];
   }
 })
@@ -33,7 +33,7 @@ Meteor.publish('editAlarm', function(alarm_id){
   var thisUser = Meteor.users.findOne({_id: this.userId});
   if(thisUser){
     return [
-      Alarms.find({_id: alarm_id})
+      Alarms.find({_id: alarm_id, owner_id: this.userId})
     ];
   }
 })
