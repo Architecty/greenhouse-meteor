@@ -26,17 +26,15 @@ Meteor.startup(function(){
       console.log("Add Alarm");
       var sendEmail = (msgTypes.indexOf("email") > -1),
           sendSMS = (msgTypes.indexOf("sms") > -1);
-      var valueC = (+value * (5/9) -32);
 
-      Alarms.insert({sensor_id: sensor_id, owner_id: Meteor.userId(), name: name, alarmType: alarmType, value: valueC, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}});
+      Alarms.insert({sensor_id: sensor_id, owner_id: Meteor.userId(), name: name, alarmType: alarmType, value: value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}});
       return;
     },
     editAlarm: function(alarm_id, name, alarmType, value, msgTypes){
       if(!Meteor.user()) return;
       var sendEmail = (msgTypes.indexOf("email") > -1),
           sendSMS = (msgTypes.indexOf("sms") > -1);
-      var valueC = (+value * (5/9) -32);
-      Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: valueC, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}}});
+      Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}}});
       return;
     }
   })
@@ -63,7 +61,7 @@ var findSensor = function(sensorID, currentIP){
 var testAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: false});
   allAlarms.forEach(function(doc){
-    switch(doc.type){
+    switch(doc.alarmType){
       case "above":
         var timeValue = new Date().getTime() - (10 * 60 * 1000); //Look at the previous 10 minutes for data
         var readingCount = Readings.find({sensor_id: doc.sensor_id, time: {$gte: timeValue}, value: {$gt: doc.value}}).count(); //Check the number of matching readings from this sensor within the last 10 minutes
@@ -108,10 +106,11 @@ var sendSMSAlert = function(alarm_id){
 var sendEmailAlert = function(alarm_id){
   var thisAlarm = Alarms.findOne({_id: alarm_id});
   var thisSensor = Sensors.findOne({_id: thisAlarm.sensor_id});
+  var latestReading = Readings.findOne({sensor_id: thisAlarm.sensor_id}, {sort:{time:-1}})
   var owner = Meteor.users.findOne({_id: thisAlarm.owner_id});
 
-  var html = "You've received an alert from " + thisSensor.name + ", from the alarm for " + thisAlarm.name + ".";
-  var text = "You've received an alert from " + thisSensor.name + ", from the alarm for " + thisAlarm.name + ".";
+  var html = "<h2>You've received an alert from " + thisSensor.name + ".</h2> <h4>From the alarm for " + thisAlarm.name + ". The most recent reading is </h4><h3>" + CentigradeToFarenheit(latestReading.value) + " degrees F.</h3>";
+  var text = "You've received an alert from " + thisSensor.name + ", from the alarm for " + thisAlarm.name + ". The most recent reading is " + CentigradeToFarenheit(latestReading.value) + " degrees F.";
 
   Email.send({
     from: "alerts@greenhouse.clayson.io",

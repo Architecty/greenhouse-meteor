@@ -14,7 +14,7 @@ Template.editAlarm.helpers({
       if(thisAlarm.actions.sendSMS) msgType.push('sms');
       Session.set('msgType', msgType);
       Session.set('alarmType', thisAlarm.alarmType);
-      thisAlarm.value = thisAlarm.value * (9/5) + 32;
+      thisAlarm.value = CentrigradeToFarenheit(thisAlarm.value);
     }
     return thisAlarm;
   },
@@ -44,7 +44,7 @@ Template.editAlarm.events({
         alarm_id = FlowRouter.getParam('alarm_id'),
         name = $("#name").val(),
         alarmType = Session.get('alarmType'),
-        value = $("#value").val(),
+        value = FarenheitToCentigrade(+$("#value").val()),
         msgTypes = Session.get('msgType');
     if(alarm_id && name && alarmType && value && msgTypes){
 

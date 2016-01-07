@@ -33,7 +33,7 @@ Template.addAlarm.events({
     var sensor_id = FlowRouter.getParam('sensor_id'),
         name = $("#name").val(),
         alarmType = Session.get('alarmType'),
-        value = $("#value").val(),
+        value = FarenheitToCentigrade(+$("#value").val()),
         msgTypes = Session.get('msgType');
     if(sensor_id && name && alarmType && value && msgTypes){
 
