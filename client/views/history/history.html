@@ -1,0 +1,38 @@
+<Template name="history">
+    {{>navBar}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel panel-success loginPanel">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">History: {{#if thisSensor.name}}{{thisSensor.name}}{{else}}{{thisSensor.sensorID}}{{/if}}
+                            <span class="pull-right">
+                                <a class="btn btn-xs btn-success" href="{{pathFor 'status'}}">
+                                    Back
+                                </a>
+                            </span>
+                        </h1>
+                    </div>
+                    <div class="panel-body">
+                        <div class="well well-sm">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <th>Hour</th>
+                                    <th>Temp</th>
+                                </thead>
+                                <tbody>
+                                    {{#each selectedReadings}}
+                                    <tr>
+                                        <td>{{hourToTime hour}}</td>
+                                        <td>{{{celsiusToFarenheit temp}}}</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Template>

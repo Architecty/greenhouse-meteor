@@ -37,3 +37,12 @@ Meteor.publish('editAlarm', function(alarm_id){
     ];
   }
 })
+
+Meteor.publish('history', function(sensor_id, timeStart, timeStop){
+  var thisUser = Meteor.users.findOne({_id: this.userId});
+  if(thisUser){
+    return [
+      Readings.find({sensor_id: sensor_id, time: {$gte: timeStart}, time:{$lte: timeStop}})
+    ];
+  }
+})
