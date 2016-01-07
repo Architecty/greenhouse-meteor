@@ -1,7 +1,7 @@
 Template.history.onCreated(function(){
   var self = this;
   self.autorun(function () {
-    self.subscribe('history', FlowRouter.getParam('sensor_id'), moment().subtract(1, 'd').valueOf(), moment().valueOf());
+    self.subscribe('history', FlowRouter.getParam('sensor_id'), moment().subtract(1, 'days').valueOf(), moment().valueOf());
   });
 });
 
