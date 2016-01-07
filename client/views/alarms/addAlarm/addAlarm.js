@@ -35,7 +35,7 @@ Template.addAlarm.events({
         alarmType = Session.get('alarmType'),
         value = FarenheitToCentigrade(+$("#value").val()),
         msgTypes = Session.get('msgType');
-    if(sensor_id && name && alarmType && value && msgTypes){
+    if(sensor_id && name && alarmType && value !== undefined && value !== "" && value !== null && msgTypes){
 
       Meteor.call('addAlarm', sensor_id, name, alarmType, value, msgTypes, function(){
         FlowRouter.go('alarmList', {sensor_id: sensor_id});
