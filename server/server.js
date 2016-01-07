@@ -88,6 +88,42 @@ var testAlarms = function(sensor_id){
   console.log("Tested Alarms");
 }
 
+var clearAlarms = function(sensor_id){
+  var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: true});
+  allAlarms.forEach(function(doc){
+    switch(doc.alarmType){
+      case "above":
+        var timeValue = new Date().getTime() - (10 * 60 * 1000); //Look at the previous 10 minutes for data
+        var readingCount = Readings.find({sensor_id: doc.sensor_id, time: {$gte: timeValue}, value: {$lt: doc.value}}).count(); //Check the number of matching readings from this sensor within the last 10 minutes
+        if(readingCount > 3){ //Don't set it off if only a single reading comes in -- maybe something went wrong? Wait until 3 tests have completed (should take 3 minutes)
+          deactivateAlarm(doc._id);
+        }
+        break;
+      case "below":
+        var timeValue = new Date().getTime() - (10 * 60 * 1000); //Look at the previous 10 minutes for data
+        var readingCount = Readings.find({sensor_id: doc.sensor_id, time: {$gte: timeValue}, value: {$gt: doc.value}}).count(); //Check the number of matching readings from this sensor within the last 10 minutes
+        if(readingCount > 3){ //Don't set it off if only a single reading comes in -- maybe something went wrong? Wait until 3 tests have completed (should take 3 minutes)
+          deactivateAlarm(doc._id);
+        }
+        break;
+      case "stop":
+        var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
+        var recentReading = Readings.findOne({sensor_id: doc.sensor_id, time: {$gte: timeValue}}); //Look for a reading from this sensor within the timeframe
+        if(recentReading){ //If no readings, set off this alarm
+          deactivateAlarm(doc._id);
+        }
+        break;
+    }
+  })
+  console.log("Tested Alarms");
+}
+
+
+var deactivateAlarm = function(alarm_id){
+  Alarms.update({_id: alarm_id}, {$set: {active:false}});
+}
+
+
 var activateAlarm = function(alarm_id){
   Alarms.update({_id: alarm_id}, {$set: {active:true}});
   var thisAlarm = Alarms.findOne({_id: alarm_id});
