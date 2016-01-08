@@ -42,6 +42,7 @@ Meteor.publish('history', function(sensor_id, timeStart, timeStop){
   var thisUser = Meteor.users.findOne({_id: this.userId});
   if(thisUser){
     return [
+      Sensors.find({_id: sensor_id}),
       Readings.find({sensor_id: sensor_id, $and:[{time: {$gte: timeStart}}, {time:{$lte: timeStop}}]})
     ];
   }
