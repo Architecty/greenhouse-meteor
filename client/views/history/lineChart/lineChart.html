@@ -1,0 +1,15 @@
+<Template name="lineChart">
+    <div class="panel panel-success ">
+        <div class="panel-heading">
+            <h1 class="panel-title">History: {{#if thisSensor.name}}{{thisSensor.name}}{{else}}{{thisSensor.sensorID}}{{/if}}
+            </h1>
+        </div>
+        <div class="panel-body">
+
+            <svg id="targetSVG">
+
+            </svg>
+
+        </div>
+    </div>
+</Template>
