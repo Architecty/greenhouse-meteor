@@ -7,7 +7,6 @@ Template.statusMonitorTemp.onCreated(function(){
 
 Template.statusMonitorTemp.helpers({
   latestReading: function(){
-    console.log("thisID", this._id);
     return Readings.findOne({sensor_id: this._id}, {sort:{time:-1}});
   },
   timeToString: function(timeMs){
@@ -17,6 +16,12 @@ Template.statusMonitorTemp.helpers({
     var valInC = Math.round(value / 100) / 10; //Convert the reading to a manageable number
     var valInF = Math.round((valInC * (9/5) + 32) * 10) / 10; //Convert the Celsius to Farenheit
     return valInF + "&deg; F";
+  },
+  alarmStatus: function(){
+    return (Alarms.findOne({sensor_id: this._id, active:true})) ? "btn-danger" : "btn-default";
+  },
+  alarmPanel: function(){
+    return (Alarms.findOne({sensor_id: this._id, active:true})) ? "panel-danger" : "panel-success";
   }
 })
 

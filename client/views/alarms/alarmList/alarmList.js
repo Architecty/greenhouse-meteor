@@ -11,5 +11,14 @@ Template.alarmList.helpers({
   },
   allAlarms: function(){
     return Alarms.find({sensor_id: FlowRouter.getParam('sensor_id')});
+  },
+  alarmStatus: function(){
+    if(this.enabled == false){
+      return "disabled"
+    }
+    if(this.active == true){
+      return "btn-danger";
+    }
+    return "btn-info";
   }
 })
