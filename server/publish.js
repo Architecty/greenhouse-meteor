@@ -12,7 +12,7 @@ Meteor.publish('latestReading', function(sensor_id){
   if(thisUser){
     return [
       Readings.find({sensor_id: sensor_id}, {sort: {time: -1}, limit:1}),
-      Alarms.find({sensor_id: sensor_id, active: true})
+      Alarms.find({sensor_id: sensor_id, active: true, owner_id: this.userId})
     ];
   }
 })
@@ -21,7 +21,7 @@ Meteor.publish('singleSensor', function(sensor_id){
   var thisUser = Meteor.users.findOne({_id: this.userId});
   if(thisUser){
     return [Sensors.find({_id: sensor_id}),
-            Alarms.find({sensor_id: sensor_id, active: true})
+            Alarms.find({sensor_id: sensor_id, active: true, owner_id: this.userId})
            ];
   }
 })
