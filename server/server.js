@@ -13,6 +13,7 @@ Meteor.startup(function(){
           time: currentDate.getTime()
         });
         testAlarms(thisSensor_id);
+        clearAlarms(thisSensor_id);
         console.log("Added Reading", value, "from sensor", valuesArray[i].sensorID);
       }
     },
@@ -58,23 +59,30 @@ var findSensor = function(sensorID, currentIP){
   }
 }
 
+var testReadingsAbove = function(occurencesRequired, occurences, value){
+  var total = 0;
+  occurences.forEach(function(doc){
+    if(doc.value > value) occurences++;
+  })
+  return total >= occurencesRequired;
+}
+var testReadingsBelow = function(occurencesRequired, occurences, value){
+  var total = 0;
+  occurences.forEach(function(doc){
+    if(doc.value < value) occurences++;
+  })
+  return total >= occurencesRequired;
+}
+
 var testAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: false});
   allAlarms.forEach(function(doc){
     switch(doc.alarmType){
       case "above":
-        var timeValue = new Date().getTime() - (10 * 60 * 1000); //Look at the previous 10 minutes for data
-        var readingCount = Readings.find({sensor_id: doc.sensor_id, time: {$gte: timeValue}, value: {$gt: doc.value}}).count(); //Check the number of matching readings from this sensor within the last 10 minutes
-        if(readingCount > 3){ //Don't set it off if only a single reading comes in -- maybe something went wrong? Wait until 3 tests have completed (should take 3 minutes)
-          activateAlarm(doc._id);
-        }
+        if(testReadingsAbove(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
         break;
       case "below":
-        var timeValue = new Date().getTime() - (10 * 60 * 1000); //Look at the previous 10 minutes for data
-        var readingCount = Readings.find({sensor_id: doc.sensor_id, time: {$gte: timeValue}, value: {$lt: doc.value}}).count(); //Check the number of matching readings from this sensor within the last 10 minutes
-        if(readingCount > 3){ //Don't set it off if only a single reading comes in -- maybe something went wrong? Wait until 3 tests have completed (should take 3 minutes)
-          activateAlarm(doc._id);
-        }
+        if(testReadingsBelow(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
         break;
       case "stop":
         var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
@@ -93,23 +101,15 @@ var clearAlarms = function(sensor_id){
   allAlarms.forEach(function(doc){
     switch(doc.alarmType){
       case "above":
-        var timeValue = new Date().getTime() - (10 * 60 * 1000); //Look at the previous 10 minutes for data
-        var readingCount = Readings.find({sensor_id: doc.sensor_id, time: {$gte: timeValue}, value: {$lt: doc.value}}).count(); //Check the number of matching readings from this sensor within the last 10 minutes
-        if(readingCount > 3){ //Don't set it off if only a single reading comes in -- maybe something went wrong? Wait until 3 tests have completed (should take 3 minutes)
-          deactivateAlarm(doc._id);
-        }
+        if(testReadingsBelow(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
         break;
       case "below":
-        var timeValue = new Date().getTime() - (10 * 60 * 1000); //Look at the previous 10 minutes for data
-        var readingCount = Readings.find({sensor_id: doc.sensor_id, time: {$gte: timeValue}, value: {$gt: doc.value}}).count(); //Check the number of matching readings from this sensor within the last 10 minutes
-        if(readingCount > 3){ //Don't set it off if only a single reading comes in -- maybe something went wrong? Wait until 3 tests have completed (should take 3 minutes)
-          deactivateAlarm(doc._id);
-        }
+        if(testReadingsAbove(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
         break;
       case "stop":
         var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
         var recentReading = Readings.findOne({sensor_id: doc.sensor_id, time: {$gte: timeValue}}); //Look for a reading from this sensor within the timeframe
-        if(recentReading){ //If no readings, set off this alarm
+        if(recentReading){ //If there's a reading within the desired time frame, shut off this alarm
           deactivateAlarm(doc._id);
         }
         break;
