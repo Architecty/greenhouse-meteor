@@ -48,7 +48,7 @@ Template.editAlarm.events({
         msgTypes = Session.get('msgType'),
     sensor_id = thisAlarm.sensor_id;
 
-    if(alarm_id && name && alarmType && value && msgTypes){
+    if(alarm_id && name && alarmType &&  value !== undefined && value !== "" && value !== null && msgTypes){
 
       Meteor.call('editAlarm', alarm_id, name, alarmType, value, msgTypes, function(){
         FlowRouter.go('alarmList', {sensor_id: sensor_id});
