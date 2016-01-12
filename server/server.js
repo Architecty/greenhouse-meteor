@@ -45,14 +45,6 @@ Meteor.startup(function(){
           sendSMS = (msgTypes.indexOf("sms") > -1);
       Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}}});
       return;
-    },
-    convertOldValues: function(){
-      var allReadings = Readings.find({$or: [{value: {$gt: 1000}}, {value: {$lt: -1000}}]});
-      allReadings.forEach(function(doc){
-        Readings.update({_id: doc._id}, {$set: {value: doc.value / 1000}});
-      })
-
-
     }
   })
 })
