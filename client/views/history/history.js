@@ -22,7 +22,7 @@ Template.history.helpers({
     allReadings.forEach(function(doc, index){
       if(index > 0 && index % 60 == 0){
         currentHour += doc.value;
-        var averageTempInC = (currentHour / 60 ) / 1000;
+        var averageTempInC = (currentHour / 60 );
         tempReadings.push({hour: index / 60, temp: averageTempInC});
         currentHour = 0;
       } else {
