@@ -10,6 +10,9 @@ Meteor.startup(function(){
           case "temp":
             value = value / 1000;
             break;
+          default:
+            value = value / 1000;
+            break;
         }
 
         Readings.insert({
