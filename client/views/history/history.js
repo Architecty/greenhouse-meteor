@@ -10,7 +10,7 @@ Template.history.helpers({
     return Sensors.findOne({_id: FlowRouter.getParam('sensor_id')})
   },
   celsiusToFarenheit: function(celsius){
-    return CentrigradeToFarenheit(celsius) + "&deg; F"
+    return CentigradeToFarenheit(celsius) + "&deg; F"
   },
   hourToTime: function(hoursCount){
     return moment().subtract(hoursCount, 'h').format("h a");

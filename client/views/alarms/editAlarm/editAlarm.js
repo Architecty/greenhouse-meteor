@@ -14,7 +14,7 @@ Template.editAlarm.helpers({
       if(thisAlarm.actions.sendSMS) msgType.push('sms');
       Session.set('msgType', msgType);
       Session.set('alarmType', thisAlarm.alarmType);
-      thisAlarm.value = CentrigradeToFarenheit(thisAlarm.value);
+      thisAlarm.value = CentigradeToFarenheit(thisAlarm.value);
     }
     return thisAlarm;
   },

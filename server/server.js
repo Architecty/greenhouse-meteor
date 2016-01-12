@@ -2,11 +2,16 @@ Meteor.startup(function(){
 
   Meteor.methods({
     addValues: function(valuesArray){ //A method to add values from the Raspberry Pi to the system;
-      console.log(valuesArray);
       var currentDate = new Date();
       for(var i = 0; i < valuesArray.length; i++){
         var thisSensor_id = findSensor(valuesArray[i].sensorID, valuesArray[i].currentIP);
         var value = +valuesArray[i].value.match(/-??\d+/)[0];
+        switch(valuesArray[i].sensorType){
+          case "temp":
+            value = value / 1000;
+            break;
+        }
+
         Readings.insert({
           sensor_id: thisSensor_id,
           value: value,
@@ -37,6 +42,14 @@ Meteor.startup(function(){
           sendSMS = (msgTypes.indexOf("sms") > -1);
       Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}}});
       return;
+    },
+    convertOldValues: function(){
+      var allReadings = Readings.find({$or: [{value: {$gt: 1000}}, {value: {$lt: -1000}}]});
+      allReadings.forEach(function(doc){
+        Readings.update({_id: doc._id}, {$set: {value: doc.value / 1000}});
+      })
+
+
     }
   })
 })
@@ -62,14 +75,16 @@ var findSensor = function(sensorID, currentIP){
 var testReadingsAbove = function(occurencesRequired, occurences, value){
   var total = 0;
   occurences.forEach(function(doc){
-    if(doc.value > value) occurences++;
+    console.log("ReadingValue: " + doc.value);
+    if(doc.value > value) total++;
   })
   return total >= occurencesRequired;
 }
 var testReadingsBelow = function(occurencesRequired, occurences, value){
   var total = 0;
   occurences.forEach(function(doc){
-    if(doc.value < value) occurences++;
+    console.log("ReadingValue: " + doc.value);
+    if(doc.value < value) total++;
   })
   return total >= occurencesRequired;
 }
@@ -77,6 +92,7 @@ var testReadingsBelow = function(occurencesRequired, occurences, value){
 var testAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: false});
   allAlarms.forEach(function(doc){
+    console.log("AlarmValue: " + doc.value + " _ " + doc.alarmType);
     switch(doc.alarmType){
       case "above":
         if(testReadingsAbove(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
@@ -99,12 +115,13 @@ var testAlarms = function(sensor_id){
 var clearAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: true});
   allAlarms.forEach(function(doc){
+    console.log("ClearAlarmValue: " + doc.value + " _ " + doc.alarmType);
     switch(doc.alarmType){
       case "above":
-        if(testReadingsBelow(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
+        if(!testReadingsAbove(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
         break;
       case "below":
-        if(testReadingsAbove(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
+        if(!testReadingsBelow(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
         break;
       case "stop":
         var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
@@ -115,7 +132,7 @@ var clearAlarms = function(sensor_id){
         break;
     }
   })
-  console.log("Tested Alarms");
+  console.log("Cleared Alarms");
 }
 
 

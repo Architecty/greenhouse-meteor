@@ -13,8 +13,7 @@ Template.statusMonitorTemp.helpers({
     return moment(timeMs, 'x').format('DD MMM YYYY hh:mm a');
   },
   valueToTemp: function(value){
-    var valInC = Math.round(value / 100) / 10; //Convert the reading to a manageable number
-    var valInF = Math.round((valInC * (9/5) + 32) * 10) / 10; //Convert the Celsius to Farenheit
+    var valInF = Math.round((value * (9/5) + 32) * 10) / 10; //Convert the Celsius to Farenheit
     return valInF + "&deg; F";
   },
   alarmStatus: function(){
