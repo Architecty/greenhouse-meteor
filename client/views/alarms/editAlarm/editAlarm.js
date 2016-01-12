@@ -45,11 +45,13 @@ Template.editAlarm.events({
         name = $("#name").val(),
         alarmType = Session.get('alarmType'),
         value = FarenheitToCentigrade(+$("#value").val()),
-        msgTypes = Session.get('msgType');
+        msgTypes = Session.get('msgType'),
+    sensor_id = thisAlarm.sensor_id;
+
     if(alarm_id && name && alarmType && value && msgTypes){
 
       Meteor.call('editAlarm', alarm_id, name, alarmType, value, msgTypes, function(){
-        FlowRouter.go('alarmList', {sensor_id: thisAlarm.sensor_id});
+        FlowRouter.go('alarmList', {sensor_id: sensor_id});
       })
     } else {
       console.log( sensor_id, name, alarmType, value, msgTypes);

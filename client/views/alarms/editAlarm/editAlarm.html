@@ -10,6 +10,7 @@
                         </h1>
                     </div>
                     <div class="panel-body">
+                        {{#if Template.subscriptionsReady}}
                         <form>
                             <div class="form-group">
                                 <label for="sensorName">Create an alarm called...</label>
@@ -41,6 +42,9 @@
                             <span class="pull-right"><button type="submit" id="updateAlarm" class="btn btn-success">Update Alarm</button></span>
 
                         </form>
+                        {{else}}
+                        {{>loadingCubes}}
+                        {{/if}}
                     </div>
                 </div>
             </div>
