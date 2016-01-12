@@ -31,7 +31,7 @@ Meteor.publish('alarmList', function(sensor_id){
   if(thisUser){
     return [
       Sensors.find({_id: sensor_id}),
-      Alarms.find({sensor_id: sensor_id, owner_id: this.userId})
+      Alarms.find({sensor_id: sensor_id, enabled:true, owner_id: this.userId})
     ];
   }
 })

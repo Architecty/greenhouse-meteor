@@ -46,7 +46,7 @@ Template.editAlarm.events({
         alarmType = Session.get('alarmType'),
         value = FarenheitToCentigrade(+$("#value").val()),
         msgTypes = Session.get('msgType'),
-    sensor_id = thisAlarm.sensor_id;
+        sensor_id = thisAlarm.sensor_id;
 
     if(alarm_id && name && alarmType &&  value !== undefined && value !== "" && value !== null && msgTypes){
 
@@ -57,6 +57,20 @@ Template.editAlarm.events({
       console.log( sensor_id, name, alarmType, value, msgTypes);
       bootbox.alert('Make sure to fill out all of the fields');
     }
+  },
+  "click #disableAlarm": function(e){
+    var thisAlarm = Alarms.findOne({_id: FlowRouter.getParam('alarm_id')}),
+        alarm_id = FlowRouter.getParam('alarm_id'),
+        msgTypes = Session.get('msgType'),
+        sensor_id = thisAlarm.sensor_id;
+
+    bootbox.confirm("Really Delete this alarm?", function(result){
+      if(result){
+        Meteor.call('disableAlarm', alarm_id, name, alarmType, value, msgTypes, function(){
+          FlowRouter.go('alarmList', {sensor_id: sensor_id});
+        })
+      }
+    })
   },
   "click .alarmType": function(e){
     Session.set('alarmType', $(e.currentTarget).prop('id'));

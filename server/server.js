@@ -45,6 +45,11 @@ Meteor.startup(function(){
           sendSMS = (msgTypes.indexOf("sms") > -1);
       Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}}});
       return;
+    },
+    disableAlarm: function(alarm_id){
+      if(!Meteor.user()) return;
+      Alarms.update({_id: alarm_id}, {$set: {enabled: false}});
+      return;
     }
   })
 })
