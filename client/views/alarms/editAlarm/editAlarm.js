@@ -66,7 +66,7 @@ Template.editAlarm.events({
 
     bootbox.confirm("Really Delete this alarm?", function(result){
       if(result){
-        Meteor.call('disableAlarm', alarm_id, name, alarmType, value, msgTypes, function(){
+        Meteor.call('disableAlarm', alarm_id, function(){
           FlowRouter.go('alarmList', {sensor_id: sensor_id});
         })
       }
