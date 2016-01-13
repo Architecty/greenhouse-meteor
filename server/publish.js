@@ -11,7 +11,7 @@ Meteor.publish('latestReading', function(sensor_id){
   var thisUser = Meteor.users.findOne({_id: this.userId});
   if(thisUser){
     return [
-      //       Readings.find({sensor_id: sensor_id}, {sort: {time: -1}, limit:1}),
+      Readings.find({sensor_id: sensor_id}, {sort: {time: -1}, limit:1}),
       Alarms.find({sensor_id: sensor_id, active: true, owner_id: this.userId})
     ];
   }
@@ -50,7 +50,7 @@ Meteor.publish('history', function(sensor_id, timeStart, timeStop){
   var thisUser = Meteor.users.findOne({_id: this.userId});
   if(thisUser){
     return [
-      //       Readings.find({sensor_id: sensor_id, $and:[{time: {$gte: timeStart}}, {time:{$lte: timeStop}}]}),
+      Readings.find({sensor_id: sensor_id, $and:[{time: {$gte: timeStart}}, {time:{$lte: timeStop}}]}),
       Sensors.find({_id: sensor_id})
     ];
   }
