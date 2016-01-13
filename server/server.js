@@ -24,6 +24,7 @@ Meteor.startup(function(){
         clearAlarms(thisSensor_id);
         console.log("Added Reading", value, "from sensor", valuesArray[i].sensorID);
       }
+      clearLoginToken();
     },
     updateSensor: function(sensor_id, name, desc, type){
       if(!Meteor.user()) return;
@@ -172,4 +173,9 @@ var sendEmailAlert = function(alarm_id){
     text: html,
     html: text
   });
+}
+
+//Remove the login tokens from the Pi's user. Because Meteor doesn't clear the login tokens, and we're logging in every minute, this is becoming huge
+var clearLoginToken = function(){
+  Meteor.users.update({_id: Meteor.userId()}, {$set: {"services.resume.loginTokens":[]}});
 }
