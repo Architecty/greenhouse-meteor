@@ -25,6 +25,7 @@ Meteor.startup(function(){
         clearAlarms(thisSensor_id);
         console.log("Added Reading", value, "from sensor", valuesArray[i].sensorID);
       }
+      clearLoginToken();
     },
     updateSensor: function(sensor_id, name, desc, type){
       if(!Meteor.user()) return;
@@ -110,10 +111,10 @@ var testAlarms = function(sensor_id){
     console.log("AlarmValue: " + doc.value + " _ " + doc.alarmType);
     switch(doc.alarmType){
       case "above":
-        if(testReadingsAbove(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
+        if(testReadingsAbove(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
         break;
       case "below":
-        if(testReadingsBelow(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
+        if(testReadingsBelow(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
         break;
       case "stop":
         var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
@@ -133,10 +134,10 @@ var clearAlarms = function(sensor_id){
     console.log("ClearAlarmValue: " + doc.value + " _ " + doc.alarmType);
     switch(doc.alarmType){
       case "above":
-        if(!testReadingsAbove(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
+        if(!testReadingsAbove(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
         break;
       case "below":
-        if(!testReadingsBelow(3, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
+        if(!testReadingsBelow(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
         break;
       case "stop":
         var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
@@ -187,4 +188,10 @@ var sendEmailAlert = function(alarm_id){
     text: html,
     html: text
   });
+}
+
+//Remove the login tokens from the Pi's user. Because Meteor doesn't clear the login tokens, and we're logging in every minute, this is becoming huge
+var clearLoginToken = function(){
+  console.log("Remove tokens from", Meteor.userId());
+  Meteor.users.update({_id: Meteor.userId()}, {$set: {"services.resume.loginTokens":[]}});
 }
