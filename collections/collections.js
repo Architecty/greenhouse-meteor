@@ -2,6 +2,8 @@ Sensors = new Meteor.Collection('sensors');
 Readings = new Meteor.Collection('readings');
 Alarms = new Meteor.Collection('alarms');
 Alerts = new Meteor.Collection('alerts');
+HourlyAverage = new Meteor.Collection('hourlyAverage');
+
 
 SensorSchema = new SimpleSchema({
   name: {
@@ -76,7 +78,6 @@ AlarmSchema = new SimpleSchema({
   }
 });
 
-
 AlertSchema = new SimpleSchema({
   alarm_id: {
     type: String,
@@ -91,3 +92,9 @@ AlertSchema = new SimpleSchema({
     label: "The time in ms when the alarm conditions ended"
   }
 });
+
+HourlyAverageSchema = new SimpleSchema({
+  sensor_id: {type: String, label: "The sensor providing the data"},
+  time: {type: Number, label: "The start of the hour being averaged"},
+  value: {type: Number, label: "The average value of time being looked at"}
+})

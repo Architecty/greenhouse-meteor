@@ -20,6 +20,7 @@ Meteor.startup(function(){
           value: value,
           time: currentDate.getTime()
         });
+        sumHourly(thisSensor_id);
         testAlarms(thisSensor_id);
         clearAlarms(thisSensor_id);
         console.log("Added Reading", value, "from sensor", valuesArray[i].sensorID);
@@ -53,6 +54,20 @@ Meteor.startup(function(){
     }
   })
 })
+
+var sumHourly = function(sensor_id){
+  var lastHourMs = moment().startOf('hour').valueOf();
+  var allReadings = Readings.find({sensor_id: sensor_id, time: {$gte: lastHourMs}});
+  var readingsCount = allReadings.count();
+  var readingsSum = 0;
+  allReadings.forEach(function(doc){
+    readingsSum += doc.value;
+  })
+  var average = (readingsCount) ? readingsSum / readingsCount : null;
+  HourlyAverage.upsert({sensor_id: sensor_id, time: lastHourMs}, {$set: {value: average}});
+  console.log("Averaged Hourly");
+}
+
 
 
 var findSensor = function(sensorID, currentIP){
