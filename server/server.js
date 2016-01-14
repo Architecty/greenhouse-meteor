@@ -72,7 +72,6 @@ var sumHourly = function(sensor_id){
   })
   var average = (readingsCount) ? readingsSum / readingsCount : null;
   HourlyAverage.upsert({sensor_id: sensor_id, time: lastHourMs}, {$set: {value: average}});
-  console.log("Averaged Hourly");
 }
 
 
@@ -97,7 +96,6 @@ var findSensor = function(sensorID, currentIP){
 var testReadingsAbove = function(occurencesRequired, occurences, value){
   var total = 0;
   occurences.forEach(function(doc){
-    console.log("ReadingValue: " + doc.value);
     if(doc.value > value) total++;
   })
   return total >= occurencesRequired;
@@ -105,7 +103,6 @@ var testReadingsAbove = function(occurencesRequired, occurences, value){
 var testReadingsBelow = function(occurencesRequired, occurences, value){
   var total = 0;
   occurences.forEach(function(doc){
-    console.log("ReadingValue: " + doc.value);
     if(doc.value < value) total++;
   })
   return total >= occurencesRequired;
@@ -114,7 +111,6 @@ var testReadingsBelow = function(occurencesRequired, occurences, value){
 var testAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: false});
   allAlarms.forEach(function(doc){
-    console.log("AlarmValue: " + doc.value + " _ " + doc.alarmType);
     switch(doc.alarmType){
       case "above":
         if(testReadingsAbove(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
@@ -137,7 +133,6 @@ var testAlarms = function(sensor_id){
 var clearAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: true});
   allAlarms.forEach(function(doc){
-    console.log("ClearAlarmValue: " + doc.value + " _ " + doc.alarmType);
     switch(doc.alarmType){
       case "above":
         if(!testReadingsAbove(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
@@ -178,11 +173,16 @@ var activateAlarm = function(alarm_id){
 }
 
 var sendIFTTTAlert = function(alarm_id){
-
+  var thisAlarm = Alarms.findOne({_id: alarm_id});
+  var thisSensor = Sensors.findOne({_id: thisAlarm.sensor_id});
+  var latestReading = Readings.findOne({sensor_id: thisAlarm.sensor_id}, {sort:{time:-1}})
+  var owner = Meteor.users.findOne({_id: thisAlarm.owner_id});
+  var url = "https://maker.ifttt.com/trigger/greenhouse_alarm/with/key/" + owner.keys.IFTTT;
+  HTTP.call('get', url, {data: {value1:thisAlarm.name, value2: latestReading.value, value3: thisSensor.type}});
 }
 
 var sendSMSAlert = function(alarm_id){
-// HTTP.call('get',
+  // HTTP.call('get',
 }
 
 var sendEmailAlert = function(alarm_id){
