@@ -178,7 +178,7 @@ var sendIFTTTAlert = function(alarm_id){
   var latestReading = Readings.findOne({sensor_id: thisAlarm.sensor_id}, {sort:{time:-1}})
   var owner = Meteor.users.findOne({_id: thisAlarm.owner_id});
   var url = "https://maker.ifttt.com/trigger/greenhouse_alarm/with/key/" + owner.keys.IFTTT;
-  HTTP.call('get', url, {data: {value1:thisAlarm.name, value2: latestReading.value, value3: thisSensor.type}});
+  HTTP.call('get', url, {data: {value1:thisSensor.name, value2: latestReading.value, value3: thisAlarm.name}});
 }
 
 var sendSMSAlert = function(alarm_id){
