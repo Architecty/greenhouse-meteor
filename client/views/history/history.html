@@ -21,10 +21,10 @@
                                     <th>Temp</th>
                                 </thead>
                                 <tbody>
-                                    {{#each selectedReadings}}
+                                    {{#each hourlyAverages}}
                                     <tr>
-                                        <td>{{hourToTime hour}}</td>
-                                        <td>{{{celsiusToFarenheit temp}}}</td>
+                                        <td>{{msToHour time}}</td>
+                                        <td>{{{celsiusToFarenheit value}}}</td>
                                     </tr>
                                     {{/each}}
                                 </tbody>

@@ -12,23 +12,10 @@ Template.history.helpers({
   celsiusToFarenheit: function(celsius){
     return CentigradeToFarenheit(celsius) + "&deg; F"
   },
-  hourToTime: function(hoursCount){
-    return moment().subtract(hoursCount, 'h').format("h a");
+  hourlyAverages: function(){
+    return HourlyAverages.find({sensor_id: FlowRouter.getParam('sensor_id')}, {sort: {time: -1}});
   },
-  selectedReadings: function(){
-    var allReadings = Readings.find({}, {sort:{time:-1}});
-    var currentHour = 0;
-    var tempReadings = [];
-    allReadings.forEach(function(doc, index){
-      if(index > 0 && index % 60 == 0){
-        currentHour += doc.value;
-        var averageTempInC = (currentHour / 60 );
-        tempReadings.push({hour: index / 60, temp: averageTempInC});
-        currentHour = 0;
-      } else {
-        currentHour += doc.value;
-      }
-    })
-    return tempReadings;
+  msToHour: function(ms){
+    return moment(ms, 'x').format('h a');
   }
 })
