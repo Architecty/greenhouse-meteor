@@ -1,0 +1,54 @@
+<Template name="editAccount">
+    {{>navBar}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel panel-success loginPanel">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">
+                            Edit Account
+                        </h1>
+                    </div>
+                    <div class="panel-body">
+                        {{#if Template.subscriptionsReady}}
+                        <form>
+                            <div class="form-group">
+                                <label for="sensorName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" placeholder="First Name" value="{{currentUser.profile.firstName}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" placeholder="Last Name" value="{{currentUser.profile.lastName}}">
+                            </div>
+
+                            <hr>
+                            <div class="form-group">
+                                <label for="sensorName">Phone Number</label>
+                                <input type="text" class="form-control" id="telephone" placeholder="Telephone Number" value="{{currentUser.profile.telephone}}">
+                            </div>
+
+                            <hr>
+
+                            <div class="form-group">
+                                <label for="sensorName">IFTTT Key</label>
+                                <input type="text" class="form-control" id="IFTTTkey" placeholder="IFTTT Key" value="{{currentUser.keys.IFTTT}}">
+                            </div>
+<!--                             <div class="form-group">
+                                <label for="sensorName">Twilio Key</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name" value="{{keys.twilio}}">
+                            </div> -->
+
+
+                            <a href="{{pathFor 'status'}}" id="cancel" class="btn btn-default">Cancel</a>
+                            <span class="pull-right"><button type="submit" id="updateAccount" class="btn btn-success">Update Account</button></span>
+
+                        </form>
+                        {{else}}
+                        {{>loadingCubes}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Template>

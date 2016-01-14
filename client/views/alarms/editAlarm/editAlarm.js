@@ -12,6 +12,7 @@ Template.editAlarm.helpers({
       var msgType = [];
       if(thisAlarm.actions.sendEmail) msgType.push('email');
       if(thisAlarm.actions.sendSMS) msgType.push('sms');
+      if(thisAlarm.actions.sendIFTTT) msgType.push('IFTTT');
       Session.set('msgType', msgType);
       Session.set('alarmType', thisAlarm.alarmType);
       thisAlarm.value = CentigradeToFarenheit(thisAlarm.value);

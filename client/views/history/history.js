@@ -13,7 +13,7 @@ Template.history.helpers({
     return CentigradeToFarenheit(celsius) + "&deg; F"
   },
   hourlyAverages: function(){
-    return HourlyAverages.find({sensor_id: FlowRouter.getParam('sensor_id')}, {sort: {time: -1}});
+    return HourlyAverage.find({sensor_id: FlowRouter.getParam('sensor_id')}, {sort: {time: -1}});
   },
   msToHour: function(ms){
     return moment(ms, 'x').format('h a');

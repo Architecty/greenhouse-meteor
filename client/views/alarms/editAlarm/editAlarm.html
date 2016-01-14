@@ -35,12 +35,13 @@
                             <div class="form-group">
                                 <label for="sensorDescription">Then send me an alert by...</label>
                                 <button class="btn btn-block btn-sm {{whichMsgType 'email'}} msgType" id="email">Email</button>
+                                <button class="btn btn-block btn-sm {{whichMsgType 'IFTTT'}} msgType" id="IFTTT">IFTTT</button>
                                 <button class="btn btn-block btn-sm {{whichMsgType 'sms'}} msgType" id="sms">SMS</button>
                             </div>
 
                             <a href="{{pathFor 'alarmList' sensor_id=thisAlarm.sensor_id}}" id="cancel" class="btn btn-default">Cancel</a>
                             <span class="pull-right"><button type="submit" id="updateAlarm" class="btn btn-success">Update Alarm</button></span>
-                            <span class="pull-right"><button type="submit" id="disableAlarm" class="btn btn-success">Delete Alarm</button></span>
+                            <span class="pull-right"><button type="submit" id="disableAlarm" class="btn btn-danger">Delete Alarm</button></span>
 
                         </form>
                         {{else}}

@@ -55,3 +55,7 @@ Meteor.publish('history', function(sensor_id, timeStart, timeStop){
     ];
   }
 })
+
+Meteor.publish('editAccount', function(){
+  return Meteor.users.find({_id: this.userId}, {fields: {profile:1, keys: 1, emails:1}});
+})

@@ -32,6 +32,11 @@ Meteor.startup(function(){
       Sensors.update({_id: sensor_id}, {$set: {name: name, type: type, desc: desc}});
       return;
     },
+    updateAccount: function(firstName, lastName, telephone, IFTTT){
+      if(!Meteor.user()) return;
+      Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.firstName": firstName, "profile.lastName": lastName, "profile.telephone": telephone, "keys.IFTTT": IFTTT}});
+      console.log("Updated user");
+    },
     addAlarm: function(sensor_id, name, alarmType, value, msgTypes){
       if(!Meteor.user()) return;
       console.log("Add Alarm");
@@ -44,8 +49,9 @@ Meteor.startup(function(){
     editAlarm: function(alarm_id, name, alarmType, value, msgTypes){
       if(!Meteor.user()) return;
       var sendEmail = (msgTypes.indexOf("email") > -1),
-          sendSMS = (msgTypes.indexOf("sms") > -1);
-      Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: value, enabled:true, active:false, actions:{sendEmail: sendEmail, sendSMS:sendSMS}}});
+          sendSMS = (msgTypes.indexOf("sms") > -1),
+          sendIFTTT = (msgTypes.indexOf("IFTTT") > -1);
+      Alarms.update({_id: alarm_id}, {$set: {name: name, alarmType: alarmType, value: value, enabled:true, active:false, actions:{sendIFTTT: sendIFTTT, sendEmail: sendEmail, sendSMS:sendSMS}}});
       return;
     },
     disableAlarm: function(alarm_id){
@@ -166,10 +172,17 @@ var activateAlarm = function(alarm_id){
   if(thisAlarm.actions.sendSMS){
     sendSMSAlert(alarm_id);
   }
+  if(thisAlarm.actions.sendIFTTT){
+    sendIFTTTAlert(alarm_id);
+  }
+}
+
+var sendIFTTTAlert = function(alarm_id){
+
 }
 
 var sendSMSAlert = function(alarm_id){
-
+// HTTP.call('get',
 }
 
 var sendEmailAlert = function(alarm_id){
