@@ -72,7 +72,7 @@ var makeBarChart = function(target){
   .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
-  var allHistory = HourlyAverage.find({},{sort:{time:1}, limit:72});
+  var allHistory = HourlyAverage.find({},{sort:{time:1}});
 
   console.log(allHistory.count());
   var data = allHistory.map(function(doc){
