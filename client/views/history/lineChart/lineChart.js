@@ -2,59 +2,84 @@ Template.lineChart.onCreated(function(){
   var self = this;
   self.autorun(function () {
     self.subscribe('history', FlowRouter.getParam('sensor_id'), moment().subtract(1, 'days').valueOf(), moment().valueOf());
+    makeBarChart();
   });
 });
 
-Template.lineChart.rendered = function(){
 
-  Readings.find({}, {time:-1}).observe({
-
-    added: function(){makeBarChart("#targetSVG", Readings.find({}, {time:-1}));
-
-                     }
-  });
-}
+Template.lineChart.helpers({
+  makeBarChart: function(){
+    makeBarChart();
+  }
+})
 
 
-var makeBarChart = function(target, dataCursor){
-
+var makeBarChart = function(target){
+  d3.select("#target").selectAll("svg").remove();
   var margin = {top: 20, right: 20, bottom: 30, left:50},
-      width = 950 - margin.left - margin.right,
+      width = 600 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
-  var formatTime = d3.time.format("%H");
+  var parseTime = d3.time.format("%L").parse;
 
   var x = d3.time.scale().range([0, width]);
 
   var y = d3.scale.linear().range([height, 0]);
 
-  var line = d3.svg.line()
-  .x(function(d) { return x(d[1]); })
-  .y(function(d) { return y(d[0]); });
 
-  var xAxis = d3.svg.axis()
-  .scale(x)
-  .orient("bottom");
 
-  var yAxis = d3.svg.axis()
-  .scale(y)
-  .orient("left");
+  var x = d3.time.scale().range([0, width]);
+  var y = d3.scale.linear().range([height, 0]);
 
-  var svg = d3.select(target)
+  // Define the axes
+  var xAxis = d3.svg.axis().scale(x)
+  .orient("bottom").ticks(12);
+
+  var yAxis = d3.svg.axis().scale(y)
+  .orient("left").ticks(5);
+
+  // Define the line
+  var valueline = d3.svg.line()
+  .x(function(d) { return x(d.time); })
+  .y(function(d) { return y(d.value); });
+
+  // Adds the svg canvas
+  var svg = d3.select("#target")
+  .append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
-  .append('g')
-  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+  .append("g")
+  .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
 
-  dataCursor = Readings.find({}, {sort:{time:-1}})
+  var allHistory = HourlyAverage.find({},{sort:{time:1}, limit:24});
 
-  var data = dataCursor.map(function(doc){
-    return [doc.value, doc.time];
-
+  console.log(allHistory.count());
+  var data = allHistory.map(function(doc){
+    return {
+      time: doc.time,
+      value: CentigradeToFarenheit(doc.value)
+    };
   })
+
+  x.domain(d3.extent(data, function(d) { return d.time; }));
+  y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
   console.log(data);
   svg.append('path')
-  .datum(data)
   .attr('class', 'line')
-  .attr('d', line);
+  .attr('d', valueline(data));
+
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
 }
