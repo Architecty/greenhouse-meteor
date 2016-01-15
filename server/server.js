@@ -58,9 +58,50 @@ Meteor.startup(function(){
       if(!Meteor.user()) return;
       Alarms.update({_id: alarm_id}, {$set: {enabled: false}});
       return;
+    },
+    updatePastHourly: function(alarm_id){
+      if(!Meteor.user()) return;
+      updatePastHourly();
     }
+
   })
 })
+
+var updatePastHourly = function(){
+  var allSensors = Sensors.find();
+
+  allSensors.forEach(function(doc){
+    updateSensorsHourly(doc._id);
+  })
+  console.log("Finished updated past sensors");
+}
+
+var updateSensorsHourly = function(sensor_id){
+  var earliestMoment = Readings.findOne({sensor_id: sensor_id}, {sort: {time:1}});
+  var currentHour = moment().startOf('hour');
+  while(currentHour.valueOf() > earliestMoment.time){
+    var allReadings = Readings.find({
+      sensor_id: sensor_id,
+      time: {
+        $gte: currentHour.valueOf(),
+        $lt: currentHour.valueOf() + (60 * 60 * 1000)
+      }
+    });
+    var average = null;
+    var readingsCount = allReadings.count();
+    if(readingsCount){
+      var readingsSum = 0;
+      allReadings.forEach(function(doc){
+        readingsSum += doc.value;
+      })
+      average = readingsSum / readingsCount;
+    }
+    HourlyAverage.upsert({sensor_id: sensor_id, time: currentHour.valueOf()}, {$set: {value: average}});
+    currentHour.subtract(1, 'hours');
+  }
+  console.log("Finished updating sensors");
+}
+
 
 var sumHourly = function(sensor_id){
   var lastHourMs = moment().startOf('hour').valueOf();
