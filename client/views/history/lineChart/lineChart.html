@@ -3,13 +3,8 @@
         <div class="panel-heading">
             <h1 class="panel-title">History: {{#if thisSensor.name}}{{thisSensor.name}}{{else}}{{thisSensor.sensorID}}{{/if}}
             </h1>
-        </div>{{#if Template.subscriptionsReady}}
-
-            {{makeBarChart}}
-
-            {{else}}
-            {{>loadingCubes}}
-            {{/if}}
+        </div>
+        {{makeBarChart}}
         <div class="panel-body" id="target">
 
 
