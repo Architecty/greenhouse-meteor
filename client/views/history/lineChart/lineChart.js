@@ -1,8 +1,10 @@
 Template.lineChart.onCreated(function(){
+    Session.set('startMoment', moment().subtract(1, 'days').valueOf())
+    Session.set('endMoment', moment().valueOf())
   var self = this;
   self.autorun(function () {
-    var startMoment = Session.get('startMoment') || moment().subtract(1, 'days').valueOf();
-    var endMoment = Session.get('endMoment') || moment().valueOf();
+    var startMoment = Session.get('startMoment');
+    var endMoment = Session.get('endMoment');
 
     self.subscribe('history', FlowRouter.getParam('sensor_id'), startMoment, endMoment);
     makeBarChart();
@@ -12,7 +14,7 @@ Template.lineChart.onCreated(function(){
 Template.lineChart.onRendered(function() {
   $('#startTime').datetimepicker({
     format: 'MM/DD/YYYY',
-    defaultDate: moment().subtract(3, 'days')
+    defaultDate: moment().subtract(1, 'days')
   })
   .on('dp.change', function(e){
     Session.set('startMoment', e.date.valueOf())
