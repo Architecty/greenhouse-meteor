@@ -1,11 +1,31 @@
 Template.lineChart.onCreated(function(){
   var self = this;
   self.autorun(function () {
-    self.subscribe('history', FlowRouter.getParam('sensor_id'), moment().subtract(1, 'days').valueOf(), moment().valueOf());
+    var startMoment = Session.get('startMoment') || moment().subtract(1, 'days').valueOf();
+    var endMoment = Session.get('endMoment') || moment().valueOf();
+
+    self.subscribe('history', FlowRouter.getParam('sensor_id'), startMoment, endMoment);
     makeBarChart();
   });
 });
 
+Template.lineChart.onRendered(function() {
+  $('#startTime').datetimepicker({
+    format: 'MM/DD/YYYY',
+    defaultDate: moment().subtract(3, 'days')
+  })
+  .on('dp.change', function(e){
+    Session.set('startMoment', e.date.valueOf())
+  });
+
+  $('#endTime').datetimepicker({
+    format: 'MM/DD/YYYY',
+    defaultDate: moment()
+  })
+  .on('dp.change', function(e){
+    Session.set('endMoment', e.date.valueOf())
+  });
+});
 
 Template.lineChart.helpers({
   makeBarChart: function(){
@@ -17,7 +37,7 @@ Template.lineChart.helpers({
 var makeBarChart = function(target){
   d3.select("#target").selectAll("svg").remove();
   var margin = {top: 20, right: 20, bottom: 30, left:50},
-      width = 600 - margin.left - margin.right,
+      width = 650 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
   var parseTime = d3.time.format("%L").parse;
@@ -52,7 +72,7 @@ var makeBarChart = function(target){
   .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
-  var allHistory = HourlyAverage.find({},{sort:{time:1}, limit:24});
+  var allHistory = HourlyAverage.find({},{sort:{time:1}, limit:72});
 
   console.log(allHistory.count());
   var data = allHistory.map(function(doc){
@@ -71,15 +91,15 @@ var makeBarChart = function(target){
   .attr('d', valueline(data));
 
 
-    // Add the X Axis
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+  // Add the X Axis
+  svg.append("g")
+  .attr("class", "x axis")
+  .attr("transform", "translate(0," + height + ")")
+  .call(xAxis);
 
-    // Add the Y Axis
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
+  // Add the Y Axis
+  svg.append("g")
+  .attr("class", "y axis")
+  .call(yAxis);
 
 }
