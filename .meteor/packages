@@ -32,3 +32,4 @@ arillo:flow-router-helpers
 d3js:d3
 percolate:synced-cron
 tsega:bootstrap3-datetimepicker
+random

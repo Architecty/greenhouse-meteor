@@ -1,0 +1,42 @@
+<Template name="addController">
+    {{>navBar}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel panel-success loginPanel">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">
+                            Add Controller
+                        </h1>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="sensorName">Name</label>
+                                <input type="text" class="form-control" id="sensorName" placeholder="Name" value="{{controller.name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorDescription">Description</label>
+                                <textarea id="sensorDescription" class="form-control" rows="3">{{controller.description}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorName">Controller ID</label>
+                                <input type="text" class="form-control" id="sensorName" placeholder="Name" value="{{controller.username}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorName">Secret</label>
+                                <input type="text" class="form-control" id="sensorName" placeholder="Name" value="{{controller.secret}}">
+                            </div>
+
+
+                            <a href="{{pathFor 'status'}}" type="submit" id="cancel" class="btn btn-default">Cancel</a>
+                            <button type="submit" id="add" class="btn btn-success">Add</button>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Template>

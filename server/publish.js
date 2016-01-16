@@ -56,6 +56,15 @@ Meteor.publish('history', function(sensor_id, timeStart, timeStop){
   }
 })
 
+Meteor.publish('controllers', function(){
+  var thisUser = Meteor.users.findOne({_id: this.userId});
+  if(thisUser){
+    return [
+      Meteor.users.find({type:"controller", owner_id: this.userId})
+    ];
+  }
+})
+
 Meteor.publish('editAccount', function(){
   return Meteor.users.find({_id: this.userId}, {fields: {profile:1, keys: 1, emails:1}});
 })

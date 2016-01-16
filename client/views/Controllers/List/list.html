@@ -1,0 +1,23 @@
+<Template name="listControllers">
+    {{>navBar}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel panel-success loginPanel">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">
+                            Controllers
+                            <span class="pull-right">
+                    <a href="{{pathFor 'addController'}}"><span class="glyphicon glyphicon-plus"></span></a></span>
+                        </h1>
+                    </div>
+                    <div class="panel-body">
+                        {{#each allControllers}}
+                        <a href="{{pathFor 'editController' controller_id=_id}}" class="btn btn-block btn-primary">{{name}}</a>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Template>

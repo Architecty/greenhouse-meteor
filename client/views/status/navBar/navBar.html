@@ -19,6 +19,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     {{#if currentUser}}
+                    <li><a href="{{pathFor 'listControllers'}}"><span class="glyphicon glyphicon-th-list"></span></a></li>
                     <li><a href="{{pathFor 'editAccount'}}"><span class="glyphicon glyphicon-user"></span></a></li>
                     <li><a href="#" id="logout">Logout</a></li>
                     {{else}}
