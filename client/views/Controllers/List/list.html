@@ -12,9 +12,13 @@
                         </h1>
                     </div>
                     <div class="panel-body">
+                        {{#if allControllers}}
                         {{#each allControllers}}
                         <a href="{{pathFor 'editController' controller_id=_id}}" class="btn btn-block btn-primary">{{name}}</a>
                         {{/each}}
+                        {{else}}
+                        <a href="{{pathFor 'addController'}}" class="btn btn-primary btn-block">Add Your First Controller</a>
+                        {{/if}}
                     </div>
                 </div>
             </div>
