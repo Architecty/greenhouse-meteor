@@ -13,19 +13,21 @@
                         <form>
                             <div class="form-group">
                                 <label for="sensorName">Name</label>
-                                <input type="text" class="form-control" id="sensorName" placeholder="Name" value="{{controller.name}}">
+                                <input type="text" class="form-control" id="sensorName" placeholder="Name">
                             </div>
                             <div class="form-group">
                                 <label for="sensorDescription">Description</label>
-                                <textarea id="sensorDescription" class="form-control" rows="3">{{controller.description}}</textarea>
+                                <textarea id="sensorDescription" class="form-control" rows="3">Describe this controller here -- perhaps where it's located?</textarea>
                             </div>
+
+                            Does your controller already have a secret and ID? Add them here. If not, copy these down and add them to your Controller config.js
                             <div class="form-group">
-                                <label for="sensorName">Controller ID</label>
-                                <input type="text" class="form-control" id="sensorName" placeholder="Name" value="{{controller.username}}">
+                                <label for="sensorName">ID</label>
+                                <input type="text" class="form-control" id="controllerID" value="{{controller.ID}}">
                             </div>
                             <div class="form-group">
                                 <label for="sensorName">Secret</label>
-                                <input type="text" class="form-control" id="sensorName" placeholder="Name" value="{{controller.secret}}">
+                                <input type="text" class="form-control" id="controllerSecret" value="{{controller.secret}}">
                             </div>
 
 
