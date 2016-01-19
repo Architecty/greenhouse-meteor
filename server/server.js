@@ -65,9 +65,35 @@ Meteor.startup(function(){
     },
     addController: function(name, desc, ID, secret){
       return addController(name, desc, ID, secret);
+    },
+    updateController: function(controller_id, name, desc, secret){
+      return updateController(controller_id, name, desc, secret);
     }
   })
 })
+
+
+var updateController = function(controller_id, name, desc, secret){
+  Meteor.users.update({
+    _id: controller_id,
+    type: "controller",
+    owner_id: Meteor.userId()
+  }, {
+    $set: {
+      name: name,
+      desc: desc,
+    }
+  })
+
+  //Make sure that the new secret is sufficiently long, and that the 'controller' being selected is actually a controller owned by this person, and not something bad.
+  if(secret && secret.length > 10){
+    if(Meteor.users.findOne({_id: controller_id, type: "controller", owner_id: Meteor.userId()})){
+      Accounts.setPassword(controller_id, secret);
+    }
+  }
+  console.log("Added new Controller");
+  return true;
+}
 
 
 var addController = function(name, desc, ID, secret){
