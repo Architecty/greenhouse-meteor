@@ -62,10 +62,32 @@ Meteor.startup(function(){
     updatePastHourly: function(alarm_id){
       if(!Meteor.user()) return;
       updatePastHourly();
+    },
+    addController: function(name, desc, ID, secret){
+      return addController(name, desc, ID, secret);
     }
-
   })
 })
+
+
+var addController = function(name, desc, ID, secret){
+  var newController = Accounts.createUser({
+    username: ID,
+    password: secret
+  });
+  Meteor.users.update({
+    _id: newController
+  }, {
+    $set: {
+      type: "controller",
+      name: name,
+      desc: desc,
+      owner_id: Meteor.userId()
+    }
+  })
+  console.log("Added new Controller");
+  return true;
+}
 
 var updatePastHourly = function(){
   var allSensors = Sensors.find();

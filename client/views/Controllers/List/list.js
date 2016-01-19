@@ -7,6 +7,6 @@ Template.listControllers.onCreated(function(){
 
 Template.listControllers.helpers({
   allControllers: function(){
-    Meteor.users.find({type: "controller", owner_id: Meteor.userId()}, {sort: {name: 1}})
+    return Meteor.users.find({type: "controller", owner_id: Meteor.userId()}, {sort: {name: 1}})
   }
 })
