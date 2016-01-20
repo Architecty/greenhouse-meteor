@@ -26,5 +26,20 @@ Template.addController.events({
     } else {
       bootbox.alert("Please fill out all of the fields", function(){});
     }
+  },
+  "click #downloadConfig": function(e){ //Download a config file, ready to be plopped onto the Raspberry Pi
+    var ID = $("#ID").val(),
+        secret = $("#secret").val();
+
+    var blob = new Blob([
+      "var config = {\n" +
+      "ddpHost: '" + Meteor.absoluteUrl() + "',\n" +
+      "ddpPort: 80,\n" +
+      "ddpUsername: '" + ID + "',\n" +
+      "ddpPassword:'" + secret + "'\n" +
+      "};\n\n" +
+
+      "module.exports = config;" ], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "config.js");
   }
 })
