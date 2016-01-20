@@ -86,7 +86,7 @@ var updateController = function(controller_id, name, desc, secret){
   })
 
   //Make sure that the new secret is sufficiently long, and that the 'controller' being selected is actually a controller owned by this person, and not something bad.
-  if(secret && secret.length > 10){
+  if(secret && secret.length >= 10){
     if(Meteor.users.findOne({_id: controller_id, type: "controller", owner_id: Meteor.userId()})){
       Accounts.setPassword(controller_id, secret);
     }
