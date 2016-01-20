@@ -30,8 +30,10 @@
 
 
                             <a href="{{pathFor 'listControllers'}}" type="submit" id="cancel" class="btn btn-default">Cancel</a>
-                            <button type="submit" id="update" class="btn btn-success">Update</button>
-
+                            <span class="pull-right">
+                                <button  id="downloadConfig" class="btn {{canDownload}}">Download Config.js</button>
+                                <button type="submit" id="update" class="btn btn-success">Update</button>
+                            </span>
 
                         </form>
                     </div>
