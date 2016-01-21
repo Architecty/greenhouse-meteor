@@ -91,7 +91,7 @@ var updateController = function(controller_id, name, desc, secret){
       Accounts.setPassword(controller_id, secret);
     }
   }
-  console.log("Added new Controller");
+  console.log("Edited Controller");
   return true;
 }
 

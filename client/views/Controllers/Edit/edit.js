@@ -3,6 +3,7 @@ Template.editController.onCreated(function(){
   self.autorun(function () {
     self.subscribe('controllers');
   });
+  this.newSecret = new ReactiveVar('');
 });
 
 Template.editController.helpers({
@@ -10,7 +11,7 @@ Template.editController.helpers({
     return Meteor.users.findOne({_id: FlowRouter.getParam('controller_id'), type: "controller", owner_id: Meteor.userId()}, {sort: {name: 1}})
   },
   canDownload: function(){
-    var secret = $("#secret").val();
+    var secret = Template.instance().newSecret.get();
     if(secret){
       return secret.length >= 10 ? "btn-warning" : "btn-default disabled";
     } else {
@@ -22,6 +23,9 @@ Template.editController.helpers({
 Template.editController.events({
   "submit form": function(e){
     e.preventDefault();
+  },
+  "keypress #secret": function(e){
+    Template.instance().newSecret.set($("#secret").val());
   },
   "click #update": function(e){
     var controller_id = FlowRouter.getParam('controller_id'),
@@ -60,6 +64,21 @@ Template.editController.events({
 
           "module.exports = config;" ], {type: "text/plain;charset=utf-8"});
         saveAs(blob, "config.js");
+      }
+    })
+  },
+  "click #newSecret": function(e, template){
+    var controller_id = FlowRouter.getParam('controller_id'),
+        name = $("#name").val(),
+        desc = $("#desc").val(),
+        newSecret = Random.secret();
+    Template.instance
+    Meteor.call('updateController', controller_id, name, desc, newSecret, function(error, result){
+      if(error){
+        bootbox.alert(error);
+      } else {
+        $("#secret").val(newSecret);
+        template.newSecret.set(newSecret);
       }
     })
   }
