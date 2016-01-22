@@ -48,22 +48,19 @@ Template.editController.events({
     }
   },
   "click #downloadConfig": function(e){ //Download a config file, ready to be plopped onto the Raspberry Pi. Only works if a new secret is typed in.
-    Meteor.call('updateController', controller_id, name, desc, secret, function(error, result){
+
+    var controller = Meteor.users.findOne({_id: FlowRouter.getParam('controller_id')})
+    var ID = controller.username,
+        name = $("#name").val(),
+        desc = $("#desc").val(),
+        secret = $("#secret").val(),
+        ddpHost = Meteor.absoluteUrl(),
+        ddpPort = 80;
+
+    Meteor.call('updateController', FlowRouter.getParam('controller_id'), name, desc, secret, function(error, result){
       if(result){
-        var controller = Meteor.users.findOne({_id: FlowRouter.getParam('controller_id')})
-        var ID = controller.username,
-            secret = $("#secret").val();
 
-        var blob = new Blob([
-          "var config = {\n" +
-          "ddpHost: '" + Meteor.absoluteUrl() + "',\n" +
-          "ddpPort: 80,\n" +
-          "ddpUsername: '" + ID + "',\n" +
-          "ddpPassword:'" + secret + "'\n" +
-          "};\n\n" +
-
-          "module.exports = config;" ], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "config.js");
+        saveConfigFile(ddpHost, ddpPort, ID, secret, "config.js");
       }
     })
   },
