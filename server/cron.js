@@ -6,7 +6,7 @@ SyncedCron.add({
   name: 'Check for projects that have stopped reporting.',
   schedule: function(parser) {
     // parser is a later.parse object
-    return parser.text('every 10 minutes');
+    return parser.text('every 5 minutes');
   },
   job: function() {
     testTimedAlarms();
