@@ -21,8 +21,8 @@ Meteor.startup(function(){
           time: currentDate.getTime()
         });
         sumHourly(thisSensor_id);
-        testAlarms(thisSensor_id);
-        clearAlarms(thisSensor_id);
+        testReadingsAlarms(thisSensor_id);
+        clearReadingsAlarms(thisSensor_id);
         console.log("Added Reading", value, "from sensor", valuesArray[i].sensorID);
       }
       clearLoginToken();
@@ -197,7 +197,7 @@ var testReadingsBelow = function(occurencesRequired, occurences, value){
   return total >= occurencesRequired;
 }
 
-var testAlarms = function(sensor_id){
+var testReadingsAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: false});
   allAlarms.forEach(function(doc){
     switch(doc.alarmType){
@@ -207,19 +207,12 @@ var testAlarms = function(sensor_id){
       case "below":
         if(testReadingsBelow(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
         break;
-      case "stop":
-        var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
-        var recentReading = Readings.findOne({sensor_id: doc.sensor_id, time: {$gte: timeValue}}); //Look for a reading from this sensor within the timeframe
-        if(!recentReading){ //If no readings, set off this alarm
-          activateAlarm(doc._id);
-        }
-        break;
     }
   })
   console.log("Tested Alarms");
 }
 
-var clearAlarms = function(sensor_id){
+var clearReadingsAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: true});
   allAlarms.forEach(function(doc){
     switch(doc.alarmType){
@@ -228,13 +221,6 @@ var clearAlarms = function(sensor_id){
         break;
       case "below":
         if(!testReadingsBelow(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
-        break;
-      case "stop":
-        var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
-        var recentReading = Readings.findOne({sensor_id: doc.sensor_id, time: {$gte: timeValue}}); //Look for a reading from this sensor within the timeframe
-        if(recentReading){ //If there's a reading within the desired time frame, shut off this alarm
-          deactivateAlarm(doc._id);
-        }
         break;
     }
   })
