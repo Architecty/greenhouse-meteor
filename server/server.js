@@ -242,12 +242,12 @@ var clearAlarms = function(sensor_id){
 }
 
 
-var deactivateAlarm = function(alarm_id){
+deactivateAlarm = function(alarm_id){
   Alarms.update({_id: alarm_id}, {$set: {active:false}});
 }
 
 
-var activateAlarm = function(alarm_id){
+activateAlarm = function(alarm_id){
   Alarms.update({_id: alarm_id}, {$set: {active:true}});
   var thisAlarm = Alarms.findOne({_id: alarm_id});
   if(thisAlarm.actions.sendEmail){
