@@ -23,15 +23,23 @@
                                 <label for="sensorName">Controller ID</label>
                                 <input type="text" class="form-control" id="username" placeholder="ID" value="{{controller.username}}" readonly>
                             </div>
-                            <div class="form-group">
-                                <label for="sensorName">Secret </label><span class="pull-right"><button id="newSecret" class="btn btn-xs btn-warning">Get New Secret</button></span>
-                                <input type="text" class="form-control" id="secret" placeholder="***********************************">
+                            <div>
+                                {{#if showAdvanced}}
+                                <a href="#" class="toggledAdvanced">Hide Advanced Options</a>
+
+                                <div class="form-group">
+                                    <label for="sensorName">Secret </label><span class="pull-right"><button id="newSecret" class="btn btn-xs btn-warning">Get New Secret</button></span>
+                                    <input type="text" class="form-control" id="secret" placeholder="***********************************">
+                                </div>
+                                {{else}}
+                                <a href="#" class="toggledAdvanced">Advanced Options</a>
+                                {{/if}}
                             </div>
-
-
+                            <br>
                             <a href="{{pathFor 'listControllers'}}" type="submit" id="cancel" class="btn btn-default">Cancel</a>
                             <span class="pull-right">
-                                <button  id="downloadConfig" class="btn {{canDownload}}">Download Config.js</button>
+
+                                {{#if showAdvanced}}<button  id="downloadConfig" class="btn {{canDownload}}">Download Config.js</button>{{/if}}
                                 <button type="submit" id="update" class="btn btn-success">Update</button>
                             </span>
 

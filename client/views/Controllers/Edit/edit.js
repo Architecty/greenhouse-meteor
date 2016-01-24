@@ -4,6 +4,7 @@ Template.editController.onCreated(function(){
     self.subscribe('controllers');
   });
   this.newSecret = new ReactiveVar('');
+  this.advancedOptions = new ReactiveVar(false);
 });
 
 Template.editController.helpers({
@@ -17,10 +18,16 @@ Template.editController.helpers({
     } else {
       return "btn-default disabled";
     }
+  },
+  showAdvanced: function(){
+    return Template.instance().advancedOptions.get();
   }
 })
 
 Template.editController.events({
+  "click .toggledAdvanced": function(){
+    Template.instance().advancedOptions.set(!Template.instance().advancedOptions.get());
+  },
   "submit form": function(e){
     e.preventDefault();
   },
@@ -38,11 +45,24 @@ Template.editController.events({
         bootbox.alert("Secret must be at least 10 characters", function(){});
         return;
       }
-      Meteor.call('updateController', controller_id, name, desc, secret, function(error, result){
-        if(result){
-          FlowRouter.go('listControllers');
-        }
-      });
+      if(secret){
+
+        bootbox.confirm("Are you sure you want to set a new secret? This will mean you need to update the secret on your Raspberry Pi. If you're not sure how to do this, don't take this action.", function(result){
+          if(result){
+            Meteor.call('updateController', controller_id, name, desc, secret, function(error, result){
+              if(result){
+                FlowRouter.go('listControllers');
+              }
+            });
+          }
+        })
+      } else {
+        Meteor.call('updateController', controller_id, name, desc, secret, function(error, result){
+          if(result){
+            FlowRouter.go('listControllers');
+          }
+        });
+      }
     } else {
       bootbox.alert("Please fill out all of the fields", function(){});
     }
@@ -57,10 +77,15 @@ Template.editController.events({
         ddpHost = Meteor.absoluteUrl(),
         ddpPort = 80;
 
-    Meteor.call('updateController', FlowRouter.getParam('controller_id'), name, desc, secret, function(error, result){
+    bootbox.confirm("Are you sure you want to set a new secret? This will mean you need to update the secret on your Raspberry Pi. If you're not sure how to do this, don't take this action.", function(result){
       if(result){
+        Meteor.call('updateController', FlowRouter.getParam('controller_id'), name, desc, secret, function(error, result){
+          if(result){
 
-        saveConfigFile(ddpHost, ddpPort, ID, secret, "config.js");
+            saveConfigFile(ddpHost, ddpPort, ID, secret, "config.js");
+          }
+
+        })
       }
     })
   },
@@ -69,7 +94,6 @@ Template.editController.events({
         name = $("#name").val(),
         desc = $("#desc").val(),
         newSecret = Random.secret();
-    Template.instance
     Meteor.call('updateController', controller_id, name, desc, newSecret, function(error, result){
       if(error){
         bootbox.alert(error);
