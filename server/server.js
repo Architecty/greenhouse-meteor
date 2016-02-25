@@ -32,9 +32,14 @@ Meteor.startup(function(){
       Sensors.update({_id: sensor_id}, {$set: {name: name, type: type, desc: desc}});
       return;
     },
-    updateAccount: function(firstName, lastName, telephone, IFTTT){
+    updateAccount: function(firstName, lastName, email, telephone, IFTTT){
       if(!Meteor.user()) return;
-      Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.firstName": firstName, "profile.lastName": lastName, "profile.telephone": telephone, "keys.IFTTT": IFTTT}});
+      Meteor.users.update({_id: Meteor.userId()}, {$set: {
+        "profile.firstName": firstName,
+        "profile.lastName": lastName,
+        "profile.telephone": telephone,
+        "keys.IFTTT": IFTTT,
+        "emails.0.address": email}});
       console.log("Updated user");
     },
     addAlarm: function(sensor_id, name, alarmType, value, msgTypes){
