@@ -60,7 +60,7 @@ Meteor.publish('controllers', function(){
   var thisUser = Meteor.users.findOne({_id: this.userId});
   if(thisUser){
     return [
-      Meteor.users.find({type:"controller", owner_id: this.userId})
+      Meteor.users.find({type:"controller", owner_id: this.userId}, {fields: {username: 1, profile:1, type: 1, desc: 1, name: 1, owner_id: 1}})
     ];
   }
 })

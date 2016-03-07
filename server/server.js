@@ -21,8 +21,8 @@ Meteor.startup(function(){
           time: currentDate.getTime()
         });
         sumHourly(thisSensor_id);
-        testAlarms(thisSensor_id);
-        clearAlarms(thisSensor_id);
+        testReadingsAlarms(thisSensor_id);
+        clearReadingsAlarms(thisSensor_id);
         console.log("Added Reading", value, "from sensor", valuesArray[i].sensorID);
       }
       clearLoginToken();
@@ -32,9 +32,14 @@ Meteor.startup(function(){
       Sensors.update({_id: sensor_id}, {$set: {name: name, type: type, desc: desc}});
       return;
     },
-    updateAccount: function(firstName, lastName, telephone, IFTTT){
+    updateAccount: function(firstName, lastName, email, telephone, IFTTT){
       if(!Meteor.user()) return;
-      Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.firstName": firstName, "profile.lastName": lastName, "profile.telephone": telephone, "keys.IFTTT": IFTTT}});
+      Meteor.users.update({_id: Meteor.userId()}, {$set: {
+        "profile.firstName": firstName,
+        "profile.lastName": lastName,
+        "profile.telephone": telephone,
+        "keys.IFTTT": IFTTT,
+        "emails.0.address": email}});
       console.log("Updated user");
     },
     addAlarm: function(sensor_id, name, alarmType, value, msgTypes){
@@ -86,12 +91,12 @@ var updateController = function(controller_id, name, desc, secret){
   })
 
   //Make sure that the new secret is sufficiently long, and that the 'controller' being selected is actually a controller owned by this person, and not something bad.
-  if(secret && secret.length > 10){
+  if(secret && secret.length >= 10){
     if(Meteor.users.findOne({_id: controller_id, type: "controller", owner_id: Meteor.userId()})){
       Accounts.setPassword(controller_id, secret);
     }
   }
-  console.log("Added new Controller");
+  console.log("Edited Controller");
   return true;
 }
 
@@ -197,7 +202,7 @@ var testReadingsBelow = function(occurencesRequired, occurences, value){
   return total >= occurencesRequired;
 }
 
-var testAlarms = function(sensor_id){
+var testReadingsAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: false});
   allAlarms.forEach(function(doc){
     switch(doc.alarmType){
@@ -207,19 +212,12 @@ var testAlarms = function(sensor_id){
       case "below":
         if(testReadingsBelow(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) activateAlarm(doc._id);
         break;
-      case "stop":
-        var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
-        var recentReading = Readings.findOne({sensor_id: doc.sensor_id, time: {$gte: timeValue}}); //Look for a reading from this sensor within the timeframe
-        if(!recentReading){ //If no readings, set off this alarm
-          activateAlarm(doc._id);
-        }
-        break;
     }
   })
   console.log("Tested Alarms");
 }
 
-var clearAlarms = function(sensor_id){
+var clearReadingsAlarms = function(sensor_id){
   var allAlarms = Alarms.find({sensor_id: sensor_id, enabled:true, active: true});
   allAlarms.forEach(function(doc){
     switch(doc.alarmType){
@@ -229,25 +227,18 @@ var clearAlarms = function(sensor_id){
       case "below":
         if(!testReadingsBelow(4, Readings.find({sensor_id: doc.sensor_id}, {sort:{time:-1}, limit:5}), doc.value)) deactivateAlarm(doc._id);
         break;
-      case "stop":
-        var timeValue = new Date().getTime() - (doc.value * 60 * 1000); //Get the curent time, and subtract the determined test time from it
-        var recentReading = Readings.findOne({sensor_id: doc.sensor_id, time: {$gte: timeValue}}); //Look for a reading from this sensor within the timeframe
-        if(recentReading){ //If there's a reading within the desired time frame, shut off this alarm
-          deactivateAlarm(doc._id);
-        }
-        break;
     }
   })
   console.log("Cleared Alarms");
 }
 
 
-var deactivateAlarm = function(alarm_id){
+deactivateAlarm = function(alarm_id){
   Alarms.update({_id: alarm_id}, {$set: {active:false}});
 }
 
 
-var activateAlarm = function(alarm_id){
+activateAlarm = function(alarm_id){
   Alarms.update({_id: alarm_id}, {$set: {active:true}});
   var thisAlarm = Alarms.findOne({_id: alarm_id});
   if(thisAlarm.actions.sendEmail){

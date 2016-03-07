@@ -6,7 +6,9 @@ Template.editAccount.onCreated(function(){
 })
 
 Template.editAccount.helpers({
-
+  emailAddress: function(){
+    return Meteor.user().emails[0].address;
+  }
 });
 
 Template.editAccount.events({
@@ -16,11 +18,12 @@ Template.editAccount.events({
   "click #updateAccount": function(e){
     var firstName = $("#firstName").val(),
         lastName = $("#lastName").val(),
+      email = $("#email").val(),
         telephone = $("#telephone").val(),
         IFTTTkey = $("#IFTTTkey").val();
 
     console.log(firstName, lastName, telephone, IFTTTkey);
-    Meteor.call('updateAccount', firstName, lastName, telephone, IFTTTkey, function(error, result){
+    Meteor.call('updateAccount', firstName, lastName, email, telephone, IFTTTkey, function(error, result){
       if(!error){
         FlowRouter.go('status');
       }
