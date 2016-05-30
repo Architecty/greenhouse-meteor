@@ -1,0 +1,9 @@
+<Template name="mainTemplate">
+    <div class="container">
+        {{#if currentUser}}
+            {{>status}}
+        {{else}}
+            {{>Template.dynamic template=template}}
+        {{/if}}
+    </div>
+</Template>

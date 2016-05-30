@@ -4,7 +4,7 @@ Meteor.startup(function(){
     addValues: function(valuesArray){ //A method to add values from the Raspberry Pi to the system;
       var currentDate = new Date();
       for(var i = 0; i < valuesArray.length; i++){
-        var thisSensor_id = findSensor(valuesArray[i].sensorID, valuesArray[i].currentIP);
+        var thisSensor_id = findSensor(Meteor.userId(), valuesArray[i].sensorID, valuesArray[i].currentIP);
         var value = +valuesArray[i].value.match(/-??\d+/)[0];
         switch(valuesArray[i].sensorType){
           case "temp":
@@ -170,7 +170,7 @@ var sumHourly = function(sensor_id){
 
 
 
-var findSensor = function(sensorID, currentIP){
+var findSensor = function(controller_id, sensorID, currentIP){
   var thisSensor =  Sensors.findOne({sensorID: sensorID});
   if (thisSensor) {
     Sensors.update({_id: thisSensor._id}, {$set: {currentIP:currentIP}});
@@ -178,6 +178,7 @@ var findSensor = function(sensorID, currentIP){
   } else {
     return Sensors.insert({
       sensorID: sensorID,
+      controller_id: controller_id,
       name: "",
       type: "",
       metric: "",
@@ -285,6 +286,8 @@ var sendEmailAlert = function(alarm_id){
 
 //Remove the login tokens from the Pi's user. Because Meteor doesn't clear the login tokens, and we're logging in every minute, this is becoming huge
 var clearLoginToken = function(){
-  console.log("Remove tokens from", Meteor.userId());
-  Meteor.users.update({_id: Meteor.userId()}, {$set: {"services.resume.loginTokens":[]}});
+  console.log("Remove excess tokens from", Meteor.userId());
+  if(Meteor.user().services.resume.loginTokens.length > 10){
+    Meteor.users.update({_id: Meteor.userId()}, {$set: {"services.resume.loginTokens":[]}});
+  }
 }

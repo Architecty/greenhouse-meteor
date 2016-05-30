@@ -1,8 +1,13 @@
 Meteor.publish('sensorList', function(org_id){
   var thisUser = Meteor.users.findOne({_id: this.userId});
   if(thisUser){
+    var controllers = Meteor.users.find({owner_id: this.userId})
+    var allController_ids = [];
+    controllers.forEach(function(doc){
+      allController_ids.push(doc._id);
+    })
     return [
-      Sensors.find()
+      Sensors.find({controller_id: {$in: allController_ids}})
     ];
   }
 })
